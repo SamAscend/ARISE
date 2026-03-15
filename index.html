@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PLAYER — Samuel Mahanaim</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#05050f;--surface:#09091a;--card:#0e0e22;--border:#1a1a3a;
+  --purple:#7c3aed;--purple-lg:#a855f7;--purple-sm:#4c1d95;
+  --gold:#d97706;--gold-lg:#fbbf24;
+  --blue:#1d4ed8;--blue-lg:#60a5fa;
+  --muted:#2a2a4a;--body:#6e6e9a;--head:#ddddf5;--white:#f0f0ff;
+}
+html{background:var(--bg);}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--body);overflow-x:hidden;cursor:none;}
+
+/* Cursor */
+#cur{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;mix-blend-mode:screen;}
+#cur .dot{width:8px;height:8px;border-radius:50%;background:var(--purple-lg);box-shadow:0 0 10px 2px var(--purple-lg),0 0 20px 4px var(--purple);transform:translate(-50%,-50%);transition:transform .1s;}
+#cur .ring{width:30px;height:30px;border-radius:50%;border:1px solid rgba(168,85,247,.5);transform:translate(-50%,-50%) translate(-11px,-11px);position:absolute;top:0;left:0;transition:all .2s ease;}
+body:has(a:hover) #cur .ring,body:has(button:hover) #cur .ring{width:48px;height:48px;border-color:rgba(168,85,247,.9);transform:translate(-50%,-50%) translate(-20px,-20px);background:rgba(124,58,237,.06);}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:#05050f;}
+::-webkit-scrollbar-thumb{background:rgba(124,58,237,.5);border-radius:4px;}
+
+/* Progress */
+#pbar{position:fixed;top:0;left:0;z-index:9997;height:2px;width:0%;background:linear-gradient(90deg,var(--purple),var(--gold-lg),var(--purple-lg));box-shadow:0 0 10px var(--purple-lg);transition:width .1s linear;}
+
+/* Canvas */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7;}
+
+/* Fonts */
+.cinzel{font-family:'Cinzel',serif;}
+.sys{font-family:'JetBrains Mono',monospace;}
+
+/* System Window */
+.sys-window{position:relative;background:rgba(9,9,26,.85);border:1px solid rgba(124,58,237,.25);backdrop-filter:blur(16px);}
+.sys-window::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;border:1px solid transparent;background:linear-gradient(90deg,var(--purple) 40px,transparent 40px) top/100% 1px,linear-gradient(90deg,transparent calc(100% - 40px),var(--purple) 0) bottom/100% 1px,linear-gradient(0deg,var(--purple) 40px,transparent 40px) left/1px 100%,linear-gradient(0deg,transparent calc(100% - 40px),var(--purple) 0) right/1px 100%;background-repeat:no-repeat;pointer-events:none;}
+.sys-window::after{content:'◆';position:absolute;top:-7px;left:35px;color:var(--purple-lg);font-size:12px;text-shadow:0 0 8px var(--purple-lg);}
+.sys-corner-br{position:absolute;bottom:-7px;right:35px;color:var(--purple-lg);font-size:12px;text-shadow:0 0 8px var(--purple-lg);pointer-events:none;}
+
+/* Colors */
+.text-purple{color:var(--purple-lg);text-shadow:0 0 20px rgba(168,85,247,.7);}
+.text-gold{color:var(--gold-lg);text-shadow:0 0 12px rgba(251,191,36,.5);}
+.text-head{color:var(--head);}
+.text-body{color:var(--body);}
+
+/* Rank */
+.rank{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:4px;font-family:'Cinzel',serif;font-weight:700;font-size:.7rem;border:1px solid currentColor;transition:all .3s;}
+.rank-s{color:#f59e0b;border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.08);text-shadow:0 0 8px #f59e0b;}
+.rank-a{color:#a855f7;border-color:rgba(168,85,247,.4);background:rgba(168,85,247,.08);text-shadow:0 0 8px #a855f7;}
+.rank-b{color:#60a5fa;border-color:rgba(96,165,250,.4);background:rgba(96,165,250,.08);}
+
+/* Stat bars */
+.stat-bar-wrap{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--purple),var(--purple-lg));box-shadow:0 0 8px var(--purple-lg);transform:scaleX(0);transform-origin:left;transition:transform 1.2s cubic-bezier(.4,0,.2,1);}
+.stat-bar-fill.gold{background:linear-gradient(90deg,var(--gold),var(--gold-lg));box-shadow:0 0 8px var(--gold-lg);}
+.stat-bar-fill.blue{background:linear-gradient(90deg,var(--blue),var(--blue-lg));box-shadow:0 0 8px var(--blue-lg);}
+
+/* Skill card */
+.skill-card{background:rgba(14,14,34,.7);border:1px solid rgba(124,58,237,.15);border-radius:8px;transition:border-color .3s,transform .3s,box-shadow .3s;}
+.skill-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,.1);}
+
+/* Quest card */
+.quest-card{background:rgba(14,14,34,.7);border:1px solid rgba(124,58,237,.1);clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));transition:all .35s;position:relative;overflow:hidden;}
+.quest-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,.06) 0%,transparent 50%);opacity:0;transition:opacity .35s;}
+.quest-card:hover{border-color:rgba(124,58,237,.35);box-shadow:0 0 40px rgba(124,58,237,.08);}
+.quest-card:hover::before{opacity:1;}
+
+/* Nav */
+nav{backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);background:rgba(5,5,15,.8);border-bottom:1px solid rgba(124,58,237,.12);}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(110,110,154,.8);text-decoration:none;position:relative;transition:color .3s;}
+.nav-link::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--purple),var(--purple-lg));box-shadow:0 0 6px var(--purple-lg);transition:width .3s;}
+.nav-link:hover{color:var(--purple-lg);}
+.nav-link:hover::after{width:100%;}
+
+/* Labels */
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(168,85,247,.6);}
+.grad-line{height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.4),transparent);}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes flicker{0%,100%{opacity:1;}92%{opacity:1;}93%{opacity:.4;}95%{opacity:1;}97%{opacity:.6;}98%{opacity:1;}}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
+@keyframes scan{from{transform:translateY(-100%);}to{transform:translateY(100vh);}}
+@keyframes runeRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes shimmerGold{0%{background-position:-200% center;}100%{background-position:200% center;}}
+@keyframes notifSlide{0%{opacity:0;transform:translateY(-16px);}15%,80%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-16px);}}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.6);}50%{box-shadow:0 0 0 6px rgba(168,85,247,0);}}
+
+.anim-fade-up{animation:fadeUp .8s ease both;}
+.d1{animation-delay:.1s;}.d2{animation-delay:.2s;}.d3{animation-delay:.3s;}.d4{animation-delay:.4s;}.d5{animation-delay:.5s;}.d6{animation-delay:.6s;}.d7{animation-delay:.7s;}.d8{animation-delay:.8s;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+.reveal.on{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.1s;}.rd2{transition-delay:.2s;}.rd3{transition-delay:.3s;}.rd4{transition-delay:.4s;}
+
+/* Hero */
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse 100% 80% at 50% 50%,transparent 40%,rgba(5,5,15,.9) 100%);pointer-events:none;}
+.hero-rune{width:320px;height:320px;position:absolute;border:1px solid rgba(124,58,237,.15);border-radius:50%;animation:runeRotate 24s linear infinite;}
+.hero-rune-inner{width:200px;height:200px;border:1px solid rgba(124,58,237,.1);border-radius:50%;animation:runeRotate 16s linear infinite reverse;}
+.title-flicker{animation:flicker 8s infinite;}
+.system-notif{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);animation:notifSlide 4s ease-in-out both;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);}
+.awakened-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--gold-lg);text-shadow:0 0 10px var(--gold);animation:pulse 2.5s ease-in-out infinite;}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(3.2rem,9vw,8rem);font-weight:900;line-height:.9;color:var(--head);letter-spacing:-.02em;}
+.hero-title .name-glow{background:linear-gradient(90deg,#ddddf5 0%,var(--purple-lg) 40%,var(--gold-lg) 70%,#ddddf5 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerGold 5s linear infinite;}
+.stat-inline{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--body);}
+
+/* Status window */
+.status-row{display:grid;grid-template-columns:80px 1fr;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.status-key{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:var(--body);text-transform:uppercase;}
+.status-val{font-size:.9rem;font-weight:600;color:var(--head);}
+
+/* Ability */
+.ability{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.18);clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--body);letter-spacing:.04em;transition:all .25s;cursor:default;}
+.ability:hover{background:rgba(124,58,237,.15);border-color:rgba(168,85,247,.4);color:var(--purple-lg);}
+.adot{width:4px;height:4px;border-radius:50%;background:var(--purple-lg);box-shadow:0 0 5px var(--purple-lg);}
+
+/* Contact input */
+.c-input{width:100%;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);padding:11px 16px;color:var(--head);font-family:'JetBrains Mono',monospace;font-size:.78rem;outline:none;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);transition:border-color .25s,box-shadow .25s;}
+.c-input:focus{border-color:rgba(168,85,247,.5);box-shadow:0 0 0 2px rgba(124,58,237,.1),0 0 16px rgba(124,58,237,.08);}
+.c-input::placeholder{color:rgba(110,110,154,.4);}
+
+/* Button */
+.btn-sys{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:13px 30px;background:rgba(124,58,237,.12);border:none;outline:none;cursor:none;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);box-shadow:inset 0 0 0 1px rgba(168,85,247,.3);font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.12em;color:var(--purple-lg);transition:all .3s;}
+.btn-sys::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(168,85,247,.1));transform:scaleX(0);transform-origin:left;transition:transform .35s ease;}
+.btn-sys:hover{color:var(--white);box-shadow:inset 0 0 0 1px rgba(168,85,247,.6),0 0 24px rgba(124,58,237,.2);}
+.btn-sys:hover::before{transform:scaleX(1);}
+
+/* Mobile */
+.ham-line{display:block;width:20px;height:1.5px;background:var(--body);transition:all .3s;}
+.ham.open .ham-line:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.ham.open .ham-line:nth-child(2){opacity:0;}
+.ham.open .ham-line:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+#mob-nav{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+#mob-nav.open{max-height:260px;}
+
+/* Misc */
+::selection{background:rgba(124,58,237,.3);color:var(--purple-lg);}
+.dot-live{width:7px;height:7px;border-radius:50%;background:var(--purple-lg);box-shadow:0 0 8px var(--purple-lg);animation:pulseDot 2s ease-in-out infinite;}
+.scan-line{position:absolute;inset-x:0;height:60px;pointer-events:none;background:linear-gradient(to bottom,transparent,rgba(124,58,237,.04),transparent);animation:scan 6s ease-in-out infinite;}
+</style>
+</head>
+<body>
+
+<div id="cur"><div class="dot"></div><div class="ring"></div></div>
+<div id="pbar"></div>
+<canvas id="particles"></canvas>
+
+<!-- ═══ NAV ═══ -->
+<nav class="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <a href="#hero" class="cinzel text-sm font-bold text-head tracking-widest" style="text-decoration:none">AR<span class="text-purple">◆</span></a>
+    <div class="hidden md:flex items-center gap-10">
+      <a href="#about"    class="nav-link">Status</a>
+      <a href="#projects" class="nav-link">Quests</a>
+      <a href="#skills"   class="nav-link">Abilities</a>
+      <a href="#contact"  class="nav-link">Contact</a>
+    </div>
+    <div class="hidden md:flex items-center gap-2 sys text-xs text-body">
+      <div class="dot-live"></div><span>AVAILABLE — S-Rank Open</span>
+    </div>
+    <button id="ham-btn" class="ham md:hidden flex flex-col gap-1.5 cursor-none">
+      <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+    </button>
+  </div>
+  <div id="mob-nav" class="md:hidden">
+    <div class="flex flex-col gap-5 pt-5 pb-2 px-1">
+      <a href="#about"    class="nav-link">Status</a>
+      <a href="#projects" class="nav-link">Quests</a>
+      <a href="#skills"   class="nav-link">Abilities</a>
+      <a href="#contact"  class="nav-link">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="hero-vignette"></div>
+  <div class="scan-line" style="top:0"></div>
+
+  <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/3 items-center justify-center hidden lg:flex opacity-35" style="width:320px;height:320px">
+    <div class="hero-rune absolute" style="inset:0"></div>
+    <div class="hero-rune-inner absolute" style="top:60px;left:60px"></div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="opacity:.7">
+      <polygon points="40,5 55,28 75,28 60,45 67,68 40,55 13,68 20,45 5,28 25,28" fill="none" stroke="rgba(168,85,247,.5)" stroke-width=".8"/>
+      <circle cx="40" cy="40" r="12" fill="none" stroke="rgba(168,85,247,.4)" stroke-width=".8"/>
+      <circle cx="40" cy="40" r="3" fill="rgba(168,85,247,.8)"/>
+    </svg>
+  </div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-6 md:px-12 w-full pt-20">
+    <div class="anim-fade-up d1 mb-6">
+      <div class="system-notif">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,10 1,10" fill="none" stroke="rgba(168,85,247,.8)" stroke-width="1"/><line x1="6" y1="5" x2="6" y2="7.5" stroke="rgba(168,85,247,.8)" stroke-width=".8"/><circle cx="6" cy="9" r=".6" fill="rgba(168,85,247,.8)"/></svg>
+        <span class="sys text-xs tracking-widest" style="color:rgba(168,85,247,.8)">SYSTEM</span>
+        <span class="sys text-xs" style="color:rgba(110,110,154,.7)">// A new player has entered the field.</span>
+      </div>
+    </div>
+
+    <div class="anim-fade-up d2 mb-4">
+      <span class="awakened-tag">◆ RANK S — FULL STACK DEVELOPER ◆</span>
+    </div>
+
+    <div class="anim-fade-up d3">
+      <h1 class="hero-title title-flicker">
+            SAMUEL<br>
+        <span class="name-glow">MAHANAIM</span><span style="color:var(--purple-lg);text-shadow:0 0 20px var(--purple-lg)">.</span>
+      </h1>
+    </div>
+
+    <div class="anim-fade-up d4 mt-4 flex items-center gap-2 sys text-sm text-body">
+      <span style="color:rgba(168,85,247,.5)">&gt;&gt;</span>
+      <span id="tw"></span><span style="color:var(--purple-lg);animation:flicker 1.2s step-end infinite">▌</span>
+    </div>
+
+    <p class="anim-fade-up d5 mt-5 text-body leading-relaxed max-w-lg" style="font-size:1rem">
+      Awakened developer. I architect scalable systems and craft seamless interfaces — from dungeon-deep backends to pixel-perfect frontends.
+    </p>
+
+    <div class="anim-fade-up d5 mt-6 flex flex-wrap gap-6">
+      <div class="stat-inline"><span style="color:var(--purple-lg)">EXP</span>&nbsp;<span class="text-head" style="font-weight:600">4+ YRS</span></div>
+      <div style="width:1px;background:rgba(124,58,237,.3)"></div>
+      <div class="stat-inline"><span style="color:var(--gold-lg)">QUESTS</span>&nbsp;<span class="text-head" style="font-weight:600">30+</span></div>
+      <div style="width:1px;background:rgba(124,58,237,.3)"></div>
+      <div class="stat-inline"><span style="color:var(--blue-lg)">GUILD</span>&nbsp;<span class="text-head" style="font-weight:600">Jakarta, ID</span></div>
+    </div>
+
+    <div class="anim-fade-up d6 mt-8 flex flex-wrap items-center gap-5">
+      <a href="#projects" class="btn-sys">
+        <span>View Quests</span>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#contact" class="sys text-xs tracking-widest" style="color:var(--body);display:inline-flex;align-items:center;gap:8px;transition:color .3s;text-decoration:none" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color='var(--body)'">
+        SEND MESSAGE <span>◆</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 anim-fade-in d8">
+    <div style="width:1px;height:40px;background:linear-gradient(to bottom,rgba(124,58,237,.6),transparent)"></div>
+    <span class="sys text-xs tracking-widest" style="color:rgba(110,110,154,.4)">SCROLL</span>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about" class="relative py-28 md:py-36 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 md:gap-20 items-start">
+      <div>
+        <p class="sec-label reveal">[ PLAYER STATUS ]</p>
+        <h2 class="cinzel reveal rd1 text-head mt-4 leading-tight" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
+          About the<br><span class="text-purple">Hunter</span>
+        </h2>
+        <div class="grad-line my-6 reveal rd2"></div>
+        <p class="reveal rd2 text-body leading-relaxed mb-4">
+          Gue seorang Full Stack Developer dengan kemampuan untuk membangun sistem dari nol — backend yang kuat, frontend yang responsif, dan arsitektur yang scalable. 4+ tahun menghadapi dungeon nyata: deadline ketat, bug misterius, dan legacy systems.
+        </p>
+        <p class="reveal rd3 text-body leading-relaxed mb-8" style="font-size:.9rem">
+          Seperti Sung Jin-Woo yang terus naik level solo, gue percaya konsistensi dan adaptasi adalah kunci untuk jadi developer kelas dunia.
+        </p>
+
+        <div id="stat-section" class="reveal rd3 space-y-4">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="sys text-xs" style="color:var(--purple-lg)">STRENGTH — Frontend</span>
+              <span class="sys text-xs text-body">96</span>
+            </div>
+            <div class="stat-bar-wrap"><div class="stat-bar-fill" data-pct=".96"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="sys text-xs" style="color:var(--gold-lg)">INTELLIGENCE — Backend</span>
+              <span class="sys text-xs text-body">91</span>
+            </div>
+            <div class="stat-bar-wrap"><div class="stat-bar-fill gold" data-pct=".91"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="sys text-xs" style="color:var(--blue-lg)">AGILITY — DevOps & Cloud</span>
+              <span class="sys text-xs text-body">84</span>
+            </div>
+            <div class="stat-bar-wrap"><div class="stat-bar-fill blue" data-pct=".84"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="sys text-xs" style="color:var(--purple-lg)">SENSE — System Design</span>
+              <span class="sys text-xs text-body">89</span>
+            </div>
+            <div class="stat-bar-wrap"><div class="stat-bar-fill" data-pct=".89"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal rd2">
+        <div class="sys-window p-6 relative">
+          <div class="sys-corner-br">◆</div>
+          <div class="flex items-center justify-between mb-5 pb-4" style="border-bottom:1px solid rgba(124,58,237,.15)">
+            <div class="flex items-center gap-3">
+              <span class="rank rank-s">S</span>
+              <div>
+                <div class="cinzel text-head font-bold text-sm tracking-wider">ALEX RAFI</div>
+                <div class="sys text-xs text-body">Full Stack Developer</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="sys text-xs text-gold mb-1">LV. 47</div>
+              <div style="width:60px;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden">
+                <div style="width:72%;height:100%;background:linear-gradient(90deg,#d97706,#fbbf24);box-shadow:0 0 6px #fbbf24;border-radius:2px"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-0 mb-5">
+            <div class="status-row"><span class="status-key">Name</span><span class="status-val">Alex Rafi</span></div>
+            <div class="status-row"><span class="status-key">Class</span><span class="status-val text-purple">Full Stack Dev</span></div>
+            <div class="status-row"><span class="status-key">Guild</span><span class="status-val">Jakarta, Indonesia</span></div>
+            <div class="status-row"><span class="status-key">EXP</span><span class="status-val text-gold">4+ Years</span></div>
+            <div class="status-row"><span class="status-key">Quests</span><span class="status-val">30+ Cleared</span></div>
+            <div class="status-row" style="border:none"><span class="status-key">Status</span>
+              <div class="flex items-center gap-2"><div class="dot-live"></div><span class="status-val text-purple" style="font-size:.85rem">AVAILABLE</span></div>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid rgba(124,58,237,.12);padding-top:16px">
+            <div class="sys text-xs mb-3" style="color:rgba(110,110,154,.5);letter-spacing:.15em">TITLES UNLOCKED</div>
+            <div class="flex flex-wrap gap-2">
+              <span class="ability"><span class="adot"></span>The Architect</span>
+              <span class="ability"><span class="adot"></span>Bug Slayer</span>
+              <span class="ability"><span class="adot"></span>Solo Coder</span>
+              <span class="ability"><span class="adot"></span>Coffee Addict</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="grad-line mx-6 md:mx-12 opacity-40"></div>
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects" class="relative py-28 md:py-36 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+      <div>
+        <p class="sec-label reveal">[ QUEST LOG ]</p>
+        <h2 class="cinzel reveal rd1 text-head mt-4" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
+          Cleared <span class="text-purple">Dungeons</span>
+        </h2>
+      </div>
+      <span class="sys text-xs text-body hidden md:block reveal" style="text-align:right;max-width:220px">High-difficulty quests completed as solo or party lead.</span>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Quest 1 -->
+      <div class="quest-card reveal p-6 md:p-8 group">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="rank rank-s">S</span>
+              <span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — RANK S</span>
+              <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
+            </div>
+            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">FinTrack Dashboard</h3>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Real-time financial analytics platform. Handles 50K+ transactions/day with sub-100ms query performance. Multi-region AWS deployment.</p>
+            <div class="flex flex-wrap gap-2 mb-5">
+              <span class="ability"><span class="adot"></span>React</span>
+              <span class="ability"><span class="adot"></span>Node.js</span>
+              <span class="ability"><span class="adot"></span>PostgreSQL</span>
+              <span class="ability"><span class="adot"></span>Redis</span>
+              <span class="ability"><span class="adot"></span>AWS</span>
+            </div>
+            <a href="#" class="sys text-xs" style="color:var(--purple-lg);display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:gap .3s" onmouseover="this.style.gap='14px'" onmouseout="this.style.gap='8px'">
+              ENTER DUNGEON
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 4h10M7 1l4 3-4 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div class="w-full md:w-44 h-28 shrink-0 flex items-center justify-center" style="background:rgba(9,9,26,.8);border:1px solid rgba(124,58,237,.1);transition:border-color .3s" onmouseover="this.style.borderColor='rgba(124,58,237,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.1)'">
+            <svg width="100" height="70" viewBox="0 0 100 70" fill="none">
+              <polyline points="5,60 22,40 38,48 55,20 72,30 90,8" stroke="rgba(168,85,247,.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="5,60 22,40 38,48 55,20 72,30 90,8 90,65 5,65" fill="rgba(124,58,237,.06)"/>
+              <circle cx="55" cy="20" r="3" fill="rgba(168,85,247,.9)"/>
+              <circle cx="90" cy="8" r="3" fill="rgba(245,158,11,.9)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quest 2 -->
+      <div class="quest-card reveal rd1 p-6 md:p-8 group">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="rank rank-a">A</span>
+              <span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span>
+              <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
+            </div>
+            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">CollabSpace — SaaS Platform</h3>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Multi-tenant project management with real-time collaboration, RBAC, Kanban + Gantt views. 500+ daily active users.</p>
+            <div class="flex flex-wrap gap-2 mb-5">
+              <span class="ability"><span class="adot"></span>Next.js</span>
+              <span class="ability"><span class="adot"></span>TypeScript</span>
+              <span class="ability"><span class="adot"></span>Prisma</span>
+              <span class="ability"><span class="adot"></span>WebSocket</span>
+              <span class="ability"><span class="adot"></span>Docker</span>
+            </div>
+            <a href="#" class="sys text-xs" style="color:var(--purple-lg);display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:gap .3s" onmouseover="this.style.gap='14px'" onmouseout="this.style.gap='8px'">
+              ENTER DUNGEON
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 4h10M7 1l4 3-4 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div class="w-full md:w-44 h-28 shrink-0 flex items-center justify-center" style="background:rgba(9,9,26,.8);border:1px solid rgba(124,58,237,.1);transition:border-color .3s" onmouseover="this.style.borderColor='rgba(124,58,237,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.1)'">
+            <svg width="100" height="70" viewBox="0 0 100 70" fill="none">
+              <rect x="5" y="8" width="22" height="28" rx="2" stroke="rgba(168,85,247,.6)" stroke-width="1" fill="rgba(124,58,237,.05)"/>
+              <rect x="33" y="5" width="22" height="35" rx="2" stroke="rgba(168,85,247,.6)" stroke-width="1" fill="rgba(124,58,237,.05)"/>
+              <rect x="61" y="14" width="22" height="20" rx="2" stroke="rgba(168,85,247,.6)" stroke-width="1" fill="rgba(124,58,237,.05)"/>
+              <rect x="8" y="46" width="14" height="16" rx="1" fill="rgba(124,58,237,.4)"/>
+              <rect x="36" y="38" width="14" height="24" rx="1" fill="rgba(168,85,247,.4)"/>
+              <rect x="64" y="50" width="14" height="12" rx="1" fill="rgba(124,58,237,.3)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quest 3 -->
+      <div class="quest-card reveal rd2 p-6 md:p-8 group">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="rank rank-a">A</span>
+              <span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span>
+              <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
+            </div>
+            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">NeuralSearch API</h3>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Semantic search microservice using vector embeddings. 10x more relevant results than keyword search. Plugs into any REST API.</p>
+            <div class="flex flex-wrap gap-2 mb-5">
+              <span class="ability"><span class="adot"></span>Python</span>
+              <span class="ability"><span class="adot"></span>FastAPI</span>
+              <span class="ability"><span class="adot"></span>Pinecone</span>
+              <span class="ability"><span class="adot"></span>OpenAI</span>
+              <span class="ability"><span class="adot"></span>GCP</span>
+            </div>
+            <a href="#" class="sys text-xs" style="color:var(--purple-lg);display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:gap .3s" onmouseover="this.style.gap='14px'" onmouseout="this.style.gap='8px'">
+              ENTER DUNGEON
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 4h10M7 1l4 3-4 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div class="w-full md:w-44 h-28 shrink-0 flex items-center justify-center" style="background:rgba(9,9,26,.8);border:1px solid rgba(124,58,237,.1);transition:border-color .3s" onmouseover="this.style.borderColor='rgba(124,58,237,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.1)'">
+            <svg width="100" height="70" viewBox="0 0 100 70" fill="none">
+              <circle cx="50" cy="35" r="14" fill="none" stroke="rgba(168,85,247,.6)" stroke-width="1"/>
+              <circle cx="18" cy="18" r="7" fill="none" stroke="rgba(168,85,247,.4)" stroke-width="1"/>
+              <circle cx="82" cy="18" r="7" fill="none" stroke="rgba(168,85,247,.4)" stroke-width="1"/>
+              <circle cx="18" cy="52" r="7" fill="none" stroke="rgba(168,85,247,.4)" stroke-width="1"/>
+              <circle cx="82" cy="52" r="7" fill="none" stroke="rgba(168,85,247,.4)" stroke-width="1"/>
+              <line x1="24" y1="21" x2="38" y2="28" stroke="rgba(168,85,247,.3)" stroke-width=".8" stroke-dasharray="3 3"/>
+              <line x1="76" y1="21" x2="62" y2="28" stroke="rgba(168,85,247,.3)" stroke-width=".8" stroke-dasharray="3 3"/>
+              <line x1="24" y1="49" x2="38" y2="42" stroke="rgba(168,85,247,.3)" stroke-width=".8" stroke-dasharray="3 3"/>
+              <line x1="76" y1="49" x2="62" y2="42" stroke="rgba(168,85,247,.3)" stroke-width=".8" stroke-dasharray="3 3"/>
+              <circle cx="50" cy="35" r="4" fill="rgba(168,85,247,.9)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="grad-line mx-6 md:mx-12 opacity-40"></div>
+
+<!-- ═══ SKILLS ═══ -->
+<section id="skills" class="relative py-28 md:py-36 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto">
+    <p class="sec-label reveal">[ SKILL WINDOW ]</p>
+    <h2 class="cinzel reveal rd1 text-head mt-4 mb-14" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
+      Acquired <span class="text-purple">Abilities</span>
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div class="skill-card reveal p-5">
+        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Frontend</span></div>
+        <div class="flex flex-wrap gap-2">
+          <span class="ability"><span class="adot"></span>React</span><span class="ability"><span class="adot"></span>Next.js</span><span class="ability"><span class="adot"></span>TypeScript</span><span class="ability"><span class="adot"></span>Tailwind CSS</span><span class="ability"><span class="adot"></span>Framer Motion</span><span class="ability"><span class="adot"></span>Vue.js</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal rd1 p-5">
+        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Backend</span></div>
+        <div class="flex flex-wrap gap-2">
+          <span class="ability"><span class="adot"></span>Node.js</span><span class="ability"><span class="adot"></span>Express</span><span class="ability"><span class="adot"></span>NestJS</span><span class="ability"><span class="adot"></span>Python</span><span class="ability"><span class="adot"></span>FastAPI</span><span class="ability"><span class="adot"></span>GraphQL</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal rd2 p-5">
+        <div class="flex items-center gap-3 mb-4"><span class="rank rank-a">A</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Database</span></div>
+        <div class="flex flex-wrap gap-2">
+          <span class="ability"><span class="adot"></span>PostgreSQL</span><span class="ability"><span class="adot"></span>MongoDB</span><span class="ability"><span class="adot"></span>Redis</span><span class="ability"><span class="adot"></span>MySQL</span><span class="ability"><span class="adot"></span>Prisma</span><span class="ability"><span class="adot"></span>Supabase</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal rd1 p-5">
+        <div class="flex items-center gap-3 mb-4"><span class="rank rank-a">A</span><span class="cinzel text-head text-sm font-semibold tracking-wide">DevOps & Cloud</span></div>
+        <div class="flex flex-wrap gap-2">
+          <span class="ability"><span class="adot"></span>AWS</span><span class="ability"><span class="adot"></span>GCP</span><span class="ability"><span class="adot"></span>Docker</span><span class="ability"><span class="adot"></span>Kubernetes</span><span class="ability"><span class="adot"></span>CI/CD</span><span class="ability"><span class="adot"></span>Terraform</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal rd2 p-5">
+        <div class="flex items-center gap-3 mb-4"><span class="rank rank-b">B</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Tools & Misc</span></div>
+        <div class="flex flex-wrap gap-2">
+          <span class="ability"><span class="adot"></span>Git</span><span class="ability"><span class="adot"></span>GitHub Actions</span><span class="ability"><span class="adot"></span>Figma</span><span class="ability"><span class="adot"></span>Jest</span><span class="ability"><span class="adot"></span>Postman</span><span class="ability"><span class="adot"></span>Linux</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal rd3 p-5" style="border-style:dashed;border-color:rgba(124,58,237,.15)">
+        <div class="flex items-center gap-3 mb-4">
+          <div style="width:28px;height:28px;border-radius:4px;border:1px dashed rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:rgba(124,58,237,.4)">?</div>
+          <span class="cinzel text-head text-sm font-semibold tracking-wide">Unlocking...</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="ability" style="opacity:.6"><span class="adot" style="background:rgba(168,85,247,.4)"></span>Rust</span>
+          <span class="ability" style="opacity:.6"><span class="adot" style="background:rgba(168,85,247,.4)"></span>Solidity</span>
+          <span class="ability" style="opacity:.6"><span class="adot" style="background:rgba(168,85,247,.4)"></span>LLM Agents</span>
+          <span class="ability" style="opacity:.6"><span class="adot" style="background:rgba(168,85,247,.4)"></span>WASM</span>
+        </div>
+        <p class="sys text-xs mt-4" style="color:rgba(110,110,154,.35)">// skill still in training arc</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact" class="relative py-28 md:py-36 px-6 md:px-12 overflow-hidden">
+  <div style="position:absolute;bottom:-200px;right:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.08) 0%,transparent 70%);pointer-events:none"></div>
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+      <div>
+        <p class="sec-label reveal">[ SEND MESSAGE ]</p>
+        <h2 class="cinzel reveal rd1 text-head mt-4 leading-tight" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
+          Start a<br><span class="text-purple">New Quest</span>
+        </h2>
+        <p class="reveal rd2 text-body leading-relaxed mt-5 mb-8 max-w-sm text-sm">
+          Freelance, full-time raids, atau sekadar ngobrol soal tech — gue selalu open. Drop a message dan kita mulai.
+        </p>
+        <div class="reveal rd3 space-y-4">
+          <a href="mailto:hello@alexrafi.dev" class="flex items-center gap-4" style="text-decoration:none">
+            <div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="rgba(168,85,247,.7)" stroke-width="1"/><path d="M1 4l6 4.5L13 4" stroke="rgba(168,85,247,.7)" stroke-width="1" stroke-linecap="round"/></svg>
+            </div>
+            <span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">hello@alexrafi.dev</span>
+          </a>
+          <a href="https://github.com" target="_blank" class="flex items-center gap-4" style="text-decoration:none">
+            <div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" stroke="rgba(168,85,247,.7)" stroke-width="1.4"/></svg>
+            </div>
+            <span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">github.com/alexrafi</span>
+          </a>
+          <a href="https://linkedin.com" target="_blank" class="flex items-center gap-4" style="text-decoration:none">
+            <div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" stroke="rgba(168,85,247,.7)" stroke-width="1.4"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7" stroke="rgba(168,85,247,.7)" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </div>
+            <span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">linkedin.com/in/alexrafi</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="reveal rd2">
+        <div class="sys-window p-6 md:p-8 relative">
+          <div class="sys-corner-br">◆</div>
+          <div class="sys text-xs mb-6" style="color:rgba(110,110,154,.4);letter-spacing:.2em">// NEW_QUEST_SUBMISSION</div>
+          <form id="cf" onsubmit="submitForm(event)" class="flex flex-col gap-4">
+            <div>
+              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">PLAYER_NAME</label>
+              <input type="text" placeholder="John Doe" class="c-input" required/>
+            </div>
+            <div>
+              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">CONTACT_POINT</label>
+              <input type="email" placeholder="john@example.com" class="c-input" required/>
+            </div>
+            <div>
+              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">QUEST_TITLE</label>
+              <input type="text" placeholder="Project Inquiry / Collab" class="c-input"/>
+            </div>
+            <div>
+              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">QUEST_DETAILS</label>
+              <textarea rows="4" placeholder="Describe the mission..." class="c-input" style="resize:none" required></textarea>
+            </div>
+            <button type="submit" class="btn-sys justify-center mt-2">
+              <span id="btn-t">SUBMIT QUEST</span>
+              <svg id="btn-a" width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div id="fs" class="hidden sys text-xs text-center" style="color:var(--purple-lg);padding:8px;letter-spacing:.1em">◆ QUEST ACCEPTED — RESPONSE INCOMING ◆</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="grad-line mx-6 md:mx-12 opacity-40"></div>
+
+<footer class="py-8 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+    <span class="sys text-xs text-body" style="opacity:.5">© 2025 ALEX RAFI — ALL RIGHTS RESERVED</span>
+    <span class="sys text-xs" style="color:rgba(124,58,237,.5)">◆ RANK S DEVELOPER ◆</span>
+    <a href="#hero" class="sys text-xs flex items-center gap-2" style="color:rgba(110,110,154,.4);text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color='rgba(110,110,154,.4)'">
+      RETURN TO BASE
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 9V1M1 5l4-4 4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+/* Cursor */
+const cur=document.getElementById('cur'),dot=cur.querySelector('.dot'),ring=cur.querySelector('.ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function ac(){dot.style.left=mx+'px';dot.style.top=my+'px';rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ac);})();
+
+/* Progress bar */
+const pb=document.getElementById('pbar');
+window.addEventListener('scroll',()=>{pb.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%';});
+
+/* Particles */
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+class P{
+  constructor(){this.reset(true);}
+  reset(init=false){
+    this.x=Math.random()*W;this.y=init?Math.random()*H:H+10;
+    this.size=Math.random()*.8+.3;this.speed=Math.random()*.3+.1;
+    this.opacity=Math.random()*.4+.08;
+    this.hue=Math.random()>.75?45:275;
+  }
+  update(){this.y-=this.speed;if(this.y<-10)this.reset();}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=`hsla(${this.hue},80%,70%,${this.opacity})`;ctx.fill();}
+}
+const parts=Array.from({length:150},()=>new P());
+(function ap(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(ap);})();
+
+/* Scroll reveal */
+const revEls=document.querySelectorAll('.reveal');
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');ro.unobserve(e.target);}});},{threshold:.1});
+revEls.forEach(el=>ro.observe(el));
+
+/* Stat bars */
+const bo=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.stat-bar-fill').forEach(b=>{b.style.transform=`scaleX(${b.dataset.pct})`;});bo.unobserve(e.target);}});
+},{threshold:.3});
+const ss=document.getElementById('stat-section');
+if(ss)bo.observe(ss);
+
+/* Typewriter */
+const phrases=['Building full-stack systems.','Slaying bugs in the dungeon.','Shipping products at S-Rank speed.','Solo-leveling every day.','Awakened. Always building.'];
+let pi=0,ci=0,del=false;const tw=document.getElementById('tw');
+function type(){
+  const p=phrases[pi];
+  if(!del){tw.textContent=p.slice(0,++ci);if(ci===p.length){del=true;setTimeout(type,2000);return;}setTimeout(type,50);}
+  else{tw.textContent=p.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(type,400);return;}setTimeout(type,25);}
+}
+type();
+
+/* Mobile nav */
+const hb=document.getElementById('ham-btn'),mn=document.getElementById('mob-nav');
+hb.addEventListener('click',()=>{hb.classList.toggle('open');mn.classList.toggle('open');});
+mn.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{hb.classList.remove('open');mn.classList.remove('open');}));
+
+/* Form */
+function submitForm(e){
+  e.preventDefault();
+  const bt=document.getElementById('btn-t'),ba=document.getElementById('btn-a');
+  bt.textContent='PROCESSING...';ba.style.opacity=0;
+  setTimeout(()=>{e.target.reset();bt.textContent='SENT ◆';document.getElementById('fs').classList.remove('hidden');
+    setTimeout(()=>{bt.textContent='SUBMIT QUEST';ba.style.opacity=1;document.getElementById('fs').classList.add('hidden');},3500);
+  },1200);
+}
+</script>
+</body>
+</html>
