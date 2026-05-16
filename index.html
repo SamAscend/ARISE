@@ -213,11 +213,19 @@ nav{backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) 
       <span class="awakened-tag">◆ RANK S — FULL STACK & AI DEVELOPER ◆</span>
     </div>
 
-    <div class="anim-fade-up d3">
+    <!-- HERO TITLE WITH AVATAR - MODIFIED SECTION -->
+    <div class="flex items-center gap-4 flex-wrap anim-fade-up d3">
       <h1 class="hero-title title-flicker">
-            SAMUEL<br>
+        SAMUEL<br>
         <span class="name-glow">MAHANAIM</span><span style="color:var(--purple-lg);text-shadow:0 0 20px var(--purple-lg)">.</span>
       </h1>
+      <!-- Foto lingkaran kecil di samping nama -->
+      <div class="relative group">
+        <div class="absolute -inset-1 bg-gradient-to-r from-purple-500/40 to-gold-500/40 rounded-full blur-md opacity-60 group-hover:opacity-100 transition"></div>
+        <img src="image.png" alt="Samuel" 
+             class="relative w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border border-purple-500/40 shadow-lg
+                    transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/70">
+      </div>
     </div>
 
     <div class="anim-fade-up d4 mt-4 flex items-center gap-2 sys text-sm text-body">
@@ -351,223 +359,202 @@ nav{backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) 
 <div class="grad-line mx-6 md:mx-12 opacity-40"></div>
 
 <!-- ═══ PROJECTS (44 QUESTS) ═══ -->
+<!-- ═══ PROJECTS (WORK EXPERIENCE QUESTS) ═══ -->
 <section id="projects" class="relative py-28 md:py-36 px-6 md:px-12">
   <div class="max-w-6xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
       <div>
         <p class="sec-label reveal">[ QUEST LOG ]</p>
         <h2 class="cinzel reveal rd1 text-head mt-4" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
-          44 <span class="text-purple">Cleared Dungeons</span>
+          Cleared <span class="text-purple">Dungeons</span>
         </h2>
       </div>
-      <span class="sys text-xs text-body hidden md:block reveal" style="text-align:right;max-width:220px">Total quests completed: 44 dungeons conquered.</span>
+      <span class="sys text-xs text-body hidden md:block reveal" style="text-align:right;max-width:220px">9 dungeons conquered — from AI to full-stack.</span>
     </div>
 
     <div class="space-y-4">
-      <!-- Quest 1 - AI Document Assistant -->
+      <!-- QUEST 1 - SAGARA REVAMP (S-Rank) -->
       <div class="quest-card reveal p-6 md:p-8 group">
         <div class="flex flex-col md:flex-row md:items-start gap-6">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-3">
               <span class="rank rank-s">S</span>
-              <span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — RANK S</span>
+              <span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — DIGITAL ASCENSION</span>
               <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
             </div>
-            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">AI Document Assistant</h3>
-            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">RAG-based intelligent document QA system using LlamaIndex, OpenAI embeddings, and ChromaDB. Meningkatkan efisiensi pencarian dokumen hingga 15x.</p>
+            <h3 class="cinzel text-head text-xl font-bold mb-1 group-hover:text-purple" style="transition:color .3s">Sagara Revamp</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="sys text-xs text-gold">Sagara Technology · Jan 2026 - Present · 5 mos</span>
+              <span class="sys text-xs text-body">Hybrid · Central Jakarta</span>
+            </div>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Led the complete digital revamp of Sagara Asia Technology's official web platform, transforming it from a static company profile into a fully dynamic business development tool. Features include client consultation requests, sales dashboard for lead management, admin CMS, and an AI-powered chatbot for 24/7 real-time assistance.</p>
             <div class="flex flex-wrap gap-2 mb-5">
-              <span class="ability"><span class="adot"></span>Python</span>
-              <span class="ability"><span class="adot"></span>LangChain</span>
-              <span class="ability"><span class="adot"></span>OpenAI API</span>
-              <span class="ability"><span class="adot"></span>ChromaDB</span>
-              <span class="ability"><span class="adot"></span>FastAPI</span>
+              <span class="ability"><span class="adot"></span>HTML/CSS</span>
+              <span class="ability"><span class="adot"></span>JavaScript</span>
+              <span class="ability"><span class="adot"></span>Golang</span>
+              <span class="ability"><span class="adot"></span>PostgreSQL</span>
+              <span class="ability"><span class="adot"></span>Vercel</span>
+              <span class="ability"><span class="adot"></span>Render</span>
+              <span class="ability"><span class="adot"></span>JWT</span>
+              <span class="ability"><span class="adot"></span>Groq</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Quest 2 - E-Commerce Platform -->
+      <!-- QUEST 2 - FRONTEND DEVELOPER SAGARA (S-Rank) -->
       <div class="quest-card reveal rd1 p-6 md:p-8 group">
         <div class="flex flex-col md:flex-row md:items-start gap-6">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-3">
               <span class="rank rank-s">S</span>
-              <span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — RANK S</span>
+              <span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — FRONTEND FORTRESS</span>
               <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
             </div>
-            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">Full-Stack E-Commerce Platform</h3>
-            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Platform e-commerce lengkap dengan authentication, payment gateway, cart system, order tracking, dan admin dashboard. 200+ produk aktif.</p>
+            <h3 class="cinzel text-head text-xl font-bold mb-1 group-hover:text-purple" style="transition:color .3s">Frontend Developer</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="sys text-xs text-gold">Sagara Technology · Sep 2025 - Apr 2026 · 8 mos</span>
+              <span class="sys text-xs text-body">Hybrid · Central Jakarta</span>
+            </div>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Bergabung sebagai Front-End Developer, berfokus pada pengembangan antarmuka pengguna yang responsif dan efisien. Berkomitmen menciptakan pengalaman digital yang optimal dengan memanfaatkan teknologi modern serta praktik terbaik dalam pengembangan web.</p>
             <div class="flex flex-wrap gap-2 mb-5">
-              <span class="ability"><span class="adot"></span>Next.js</span>
-              <span class="ability"><span class="adot"></span>Node.js</span>
-              <span class="ability"><span class="adot"></span>PostgreSQL</span>
-              <span class="ability"><span class="adot"></span>Redis</span>
-              <span class="ability"><span class="adot"></span>Midtrans</span>
+              <span class="ability"><span class="adot"></span>GitHub</span>
+              <span class="ability"><span class="adot"></span>Git</span>
+              <span class="ability"><span class="adot"></span>AI Integration</span>
+              <span class="ability"><span class="adot"></span>FEED</span>
+              <span class="ability"><span class="adot"></span>API Development</span>
+              <span class="ability"><span class="adot"></span>Team Management</span>
+              <span class="ability"><span class="adot"></span>R&D</span>
+              <span class="ability"><span class="adot"></span>Full-Stack Dev</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Quest 3 - Real-time Chat App -->
+      <!-- QUEST 3 - AI ENGINEER LAPISAI (A-Rank) -->
       <div class="quest-card reveal rd1 p-6 md:p-8 group">
         <div class="flex flex-col md:flex-row md:items-start gap-6">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-3">
               <span class="rank rank-a">A</span>
-              <span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span>
+              <span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — NEURAL NEXUS</span>
               <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
             </div>
-            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">Real-time Chat Application</h3>
-            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Chat app real-time dengan WebSocket, room management, typing indicators, online status, dan file sharing.</p>
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span class="ability"><span class="adot"></span>Socket.io</span>
-              <span class="ability"><span class="adot"></span>React</span>
-              <span class="ability"><span class="adot"></span>Express</span>
-              <span class="ability"><span class="adot"></span>MongoDB</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quest 4 - AI Image Generator -->
-      <div class="quest-card reveal rd2 p-6 md:p-8 group">
-        <div class="flex flex-col md:flex-row md:items-start gap-6">
-          <div class="flex-1">
+            <h3 class="cinzel text-head text-xl font-bold mb-1 group-hover:text-purple" style="transition:color .3s">Artificial Intelligence Engineer</h3>
             <div class="flex items-center gap-3 mb-3">
-              <span class="rank rank-a">A</span>
-              <span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span>
-              <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
+              <span class="sys text-xs text-gold">LapisAI · Jun 2025 - Aug 2025 · 3 mos</span>
+              <span class="sys text-xs text-body">Remote · North Cikarang</span>
             </div>
-            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">AI Image Generation Service</h3>
-            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Service untuk generate gambar menggunakan Stable Diffusion API dengan queue system dan multiple style preset.</p>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Developed an AI-powered chatbot assistant for a corporate client, designed to support employees in managing data, automating routine tasks, and providing on-demand assistance. Built using Python, tailored to the client's internal workflow, delivering a smart assistant that enhances workplace productivity.</p>
             <div class="flex flex-wrap gap-2 mb-5">
               <span class="ability"><span class="adot"></span>Python</span>
-              <span class="ability"><span class="adot"></span>Replicate API</span>
-              <span class="ability"><span class="adot"></span>Redis Queue</span>
-              <span class="ability"><span class="adot"></span>Next.js</span>
+              <span class="ability"><span class="adot"></span>AI Chatbot</span>
+              <span class="ability"><span class="adot"></span>LLM</span>
+              <span class="ability"><span class="adot"></span>RAG</span>
+              <span class="ability"><span class="adot"></span>API Integration</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Quest 5 - Portfolio & Blog CMS -->
+      <!-- QUEST 4 - ROBOTICS ENGINEER (A-Rank) -->
       <div class="quest-card reveal rd2 p-6 md:p-8 group">
         <div class="flex flex-col md:flex-row md:items-start gap-6">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-3">
               <span class="rank rank-a">A</span>
-              <span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span>
+              <span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — MECH GARRISON</span>
               <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
             </div>
-            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">Headless CMS Portfolio</h3>
-            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Portfolio dengan headless CMS (Strapi) + frontend Next.js, markdown blog support, dan dynamic routing.</p>
+            <h3 class="cinzel text-head text-xl font-bold mb-1 group-hover:text-purple" style="transition:color .3s">Robotics Engineer</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="sys text-xs text-gold">President University · Feb 2025 - May 2025 · 4 mos</span>
+              <span class="sys text-xs text-body">Hybrid · North Cikarang</span>
+            </div>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Collaborated in a team to design and build an Arduino Uno-based robotic vehicle with obstacle detection, remote-controlled movement, and a fire/heat sensor that triggers an onboard fan turbine. Responsible for hardware assembly, programming, system testing, documentation, and final presentation.</p>
             <div class="flex flex-wrap gap-2 mb-5">
-              <span class="ability"><span class="adot"></span>Next.js</span>
-              <span class="ability"><span class="adot"></span>Strapi</span>
-              <span class="ability"><span class="adot"></span>GraphQL</span>
-              <span class="ability"><span class="adot"></span>Tailwind</span>
+              <span class="ability"><span class="adot"></span>Arduino</span>
+              <span class="ability"><span class="adot"></span>C++</span>
+              <span class="ability"><span class="adot"></span>Embedded Systems</span>
+              <span class="ability"><span class="adot"></span>Sensor Integration</span>
+              <span class="ability"><span class="adot"></span>Hardware Testing</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Quest 6 - Task Management API -->
+      <!-- QUEST 5 - PUNTEN WEBSITE (S-Rank karena Juara 1) -->
+      <div class="quest-card reveal rd2 p-6 md:p-8 group">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="rank rank-s">S</span>
+              <span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — CAMPUS CANTEEN</span>
+              <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
+            </div>
+            <h3 class="cinzel text-head text-xl font-bold mb-1 group-hover:text-purple" style="transition:color .3s">PUnten — Food Ordering Platform</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="sys text-xs text-gold">Setsail BizAccel · Nov 2023 - May 2024 · 7 mos</span>
+              <span class="sys text-xs text-body">Hybrid · North Cikarang</span>
+            </div>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Fullstack Developer building PUnten — a web-based food ordering platform exclusively for Universitas Presiden campus community. Built with HTML, CSS, JavaScript, PHP, Laravel, and MySQL. 🏆 Awarded 1st Place at Campus Project Exhibition Semester 2.</p>
+            <div class="flex flex-wrap gap-2 mb-5">
+              <span class="ability"><span class="adot"></span>PHP</span>
+              <span class="ability"><span class="adot"></span>Laravel</span>
+              <span class="ability"><span class="adot"></span>MySQL</span>
+              <span class="ability"><span class="adot"></span>HTML/CSS/JS</span>
+              <span class="ability"><span class="adot"></span>Team Management</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUEST 6 - MANGROVE RANGERS (B-Rank) -->
       <div class="quest-card reveal rd3 p-6 md:p-8 group">
         <div class="flex flex-col md:flex-row md:items-start gap-6">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-3">
               <span class="rank rank-b">B</span>
-              <span class="sys text-xs" style="color:rgba(96,165,250,.5)">DUNGEON — RANK B</span>
+              <span class="sys text-xs" style="color:rgba(96,165,250,.5)">DUNGEON — MANGROVE SANCTUARY</span>
               <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
             </div>
-            <h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple" style="transition:color .3s">Task Management REST API</h3>
-            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">RESTful API untuk task management dengan authentication JWT, role-based access, dan task assignment.</p>
+            <h3 class="cinzel text-head text-xl font-bold mb-1 group-hover:text-purple" style="transition:color .3s">Event Organization Specialist</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="sys text-xs text-gold">President University · Jun 2024 - Aug 2024 · 3 mos</span>
+              <span class="sys text-xs text-body">On-site · North Cikarang</span>
+            </div>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Event Organizer for Mangrove Rangers, a campus-based environmental social project planting 1,000 mangrove seeds along Karawang coastline. Responsible for end-to-end event planning, volunteer coordination, logistics management, and on-site operations.</p>
             <div class="flex flex-wrap gap-2 mb-5">
-              <span class="ability"><span class="adot"></span>Node.js</span>
-              <span class="ability"><span class="adot"></span>Express</span>
-              <span class="ability"><span class="adot"></span>JWT</span>
-              <span class="ability"><span class="adot"></span>MongoDB</span>
+              <span class="ability"><span class="adot"></span>Team Management</span>
+              <span class="ability"><span class="adot"></span>Event Planning</span>
+              <span class="ability"><span class="adot"></span>Logistics</span>
+              <span class="ability"><span class="adot"></span>Volunteer Coordination</span>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<div class="grad-line mx-6 md:mx-12 opacity-40"></div>
-
-<!-- ═══ SKILLS ═══ -->
-<section id="skills" class="relative py-28 md:py-36 px-6 md:px-12">
-  <div class="max-w-6xl mx-auto">
-    <p class="sec-label reveal">[ SKILL WINDOW ]</p>
-    <h2 class="cinzel reveal rd1 text-head mt-4 mb-14" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
-      Acquired <span class="text-purple">Abilities</span>
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-      <div class="skill-card reveal p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Artificial Intelligence</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>LangChain</span>
-          <span class="ability"><span class="adot"></span>OpenAI API</span>
-          <span class="ability"><span class="adot"></span>RAG Systems</span>
-          <span class="ability"><span class="adot"></span>Prompt Engineering</span>
-          <span class="ability"><span class="adot"></span>LlamaIndex</span>
-          <span class="ability"><span class="adot"></span>Vector DB</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Frontend</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>React</span>
-          <span class="ability"><span class="adot"></span>Next.js</span>
-          <span class="ability"><span class="adot"></span>TypeScript</span>
-          <span class="ability"><span class="adot"></span>Tailwind CSS</span>
-          <span class="ability"><span class="adot"></span>Vue.js</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd1 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Backend</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>Node.js</span>
-          <span class="ability"><span class="adot"></span>Express</span>
-          <span class="ability"><span class="adot"></span>Python</span>
-          <span class="ability"><span class="adot"></span>FastAPI</span>
-          <span class="ability"><span class="adot"></span>GraphQL</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd1 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-a">A</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Database & ORM</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>PostgreSQL</span>
-          <span class="ability"><span class="adot"></span>MongoDB</span>
-          <span class="ability"><span class="adot"></span>Redis</span>
-          <span class="ability"><span class="adot"></span>Prisma</span>
-          <span class="ability"><span class="adot"></span>Supabase</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd2 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-b">B</span><span class="cinzel text-head text-sm font-semibold tracking-wide">DevOps & Cloud</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>Docker</span>
-          <span class="ability"><span class="adot"></span>Vercel</span>
-          <span class="ability"><span class="adot"></span>Railway</span>
-          <span class="ability"><span class="adot"></span>GitHub Actions</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd3 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-b">B</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Tools & Others</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>Git</span>
-          <span class="ability"><span class="adot"></span>Figma</span>
-          <span class="ability"><span class="adot"></span>Postman</span>
-          <span class="ability"><span class="adot"></span>Linux</span>
+      <!-- BONUS QUEST 7 - INSURANCE AGENT (Allianz) - optional, bisa ditambah kalau mau -->
+      <div class="quest-card reveal rd3 p-6 md:p-8 group">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="rank rank-b">B</span>
+              <span class="sys text-xs" style="color:rgba(96,165,250,.5)">DUNGEON — GUARDIAN COVENANT</span>
+              <div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div>
+            </div>
+            <h3 class="cinzel text-head text-xl font-bold mb-1 group-hover:text-purple" style="transition:color .3s">Insurance Agent</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="sys text-xs text-gold">Allianz · Nov 2025 - Present · 7 mos</span>
+              <span class="sys text-xs text-body">Hybrid · Central Jakarta</span>
+            </div>
+            <p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Delivering personalized financial protection solutions through Allianz's life and health insurance products. Core responsibilities include prospecting, needs analysis, presenting tailored coverage plans, and maintaining long-term client relationships built on trust and transparency.</p>
+            <div class="flex flex-wrap gap-2 mb-5">
+              <span class="ability"><span class="adot"></span>Leadership</span>
+              <span class="ability"><span class="adot"></span>Professional Development</span>
+              <span class="ability"><span class="adot"></span>Client Relations</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -752,30 +739,7 @@ function submitForm(e){
   btnText.textContent = 'SENDING...';
   btnArrow.style.opacity = '0';
   
-  // Send to email using EmailJS
-  // Using free email sending service - EmailJS configuration
-  // Note: You need to register at emailjs.com and replace these keys
-  // For demo, we'll use a fetch to a free service or show success
-  
-  // Since EmailJS requires registration, I'll implement using 
-  // a simple mailto fallback with data collection
-  // But for actual sending, you'd want to use a backend service
-  
-  // Simulate sending with actual data preparation
-  const formData = {
-    to_email: 'samuel.sinurat05@gmail.com',
-    from_name: name,
-    from_email: email,
-    subject: `[NEW QUEST] ${questTitle}`,
-    message: `Name: ${name}\nEmail: ${email}\nQuest Title: ${questTitle}\n\nQuest Details:\n${questDetails}`
-  };
-  
-  // Using EmailJS (free tier)
-  // You need to sign up at https://www.emailjs.com/ and get credentials
-  // For now, we'll create a mailto link that opens email client
-  // But this is better: send via fetch to a webhook
-  
-  // Alternative: Use formsubmit.co free service
+  // Send to email using formsubmit.co free service
   fetch('https://formsubmit.co/ajax/samuel.sinurat05@gmail.com', {
     method: 'POST',
     headers: {
