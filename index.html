@@ -733,14 +733,14 @@ function submitForm(e) {
     return;
   }
 
-  // Format pesan
+  // Format pesan untuk email
   const message = 
+    `To: samuel.sinurat05@gmail.com\n` +
+    `Subject: [NEW QUEST] ${questTitle} - from ${name}\n\n` +
     `Name: ${name}\n` +
     `Email: ${email}\n\n` +
-    `Quest Title: ${questTitle}\n\n` +
     `Quest Details:\n${questDetails}\n\n` +
-    `---\nSent from Samuel's Portfolio\n` +
-    `Reply to: ${email}`;
+    `---\nPlease reply to: ${email}`;
 
   // Copy ke clipboard
   navigator.clipboard.writeText(message).then(() => {
@@ -748,7 +748,8 @@ function submitForm(e) {
     feedback.classList.remove('hidden');
     e.target.reset();
     
-    alert('✅ Message copied to clipboard!\n\n📧 Please open Gmail and send to:\nsamuel.sinurat05@gmail.com\n\n📋 Then paste (Ctrl+V) the message.');
+    // Tampilkan popup dengan instruksi
+    alert('✅ MESSAGE COPIED!\n\n📋 Now manually:\n1. Open Gmail (mail.google.com)\n2. Click "Compose"\n3. Paste (Ctrl+V) the message\n4. Send to samuel.sinurat05@gmail.com');
     
     setTimeout(() => {
       btnText.textContent = 'SUBMIT QUEST';
@@ -757,7 +758,7 @@ function submitForm(e) {
       setTimeout(() => feedback.classList.add('hidden'), 3000);
     }, 2000);
   }).catch(() => {
-    alert('❌ Failed to copy. Please email directly to samuel.sinurat05@gmail.com');
+    alert('❌ Copy failed. Please email directly to samuel.sinurat05@gmail.com');
     btnText.textContent = 'SUBMIT QUEST';
     btnArrow.style.opacity = '1';
     submitBtn.disabled = false;
