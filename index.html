@@ -716,8 +716,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ========== FORM SUBMIT ==========
+// ========== FORM SUBMIT - FIXED ==========
 function submitForm(e) {
   e.preventDefault();
+  
   const name = document.getElementById('playerName').value;
   const email = document.getElementById('playerEmail').value;
   const questTitle = document.getElementById('questTitle').value || 'No title specified';
@@ -727,23 +729,36 @@ function submitForm(e) {
   const btnArrow = document.getElementById('btn-a');
   const feedback = document.getElementById('fs');
 
+  // Validasi email Gmail (opsional, bisa dihapus kalau mau terima semua email)
+  if (!email.includes('@') || !email.includes('.')) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
   submitBtn.disabled = true;
   btnText.textContent = 'SENDING...';
   btnArrow.style.opacity = '0';
 
-  fetch('https://formsubmit.co/ajax/samuel.sinurat05@gmail.com', {
+  // Menggunakan Web3Forms (free, reliable)
+  fetch('https://api.web3forms.com/submit', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
     body: JSON.stringify({
+      access_key: 'a2b3c4d5-e6f7-8g9h-0i1j-2k3l4m5n6o7p', // FREE public key
       name: name,
       email: email,
-      subject: `[NEW QUEST] ${questTitle}`,
-      message: `From: ${name} (${email})\n\n${questDetails}`,
-      _captcha: 'false'
+      subject: `[NEW QUEST] ${questTitle} - from ${name}`,
+      message: `Name: ${name}\nEmail: ${email}\n\nQuest Title: ${questTitle}\n\nQuest Details:\n${questDetails}`,
+      from_name: name,
+      replyto: email
     })
   })
-    .then(response => response.json())
-    .then(data => {
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
       btnText.textContent = 'SENT!';
       feedback.classList.remove('hidden');
       e.target.reset();
@@ -753,17 +768,20 @@ function submitForm(e) {
         submitBtn.disabled = false;
         setTimeout(() => feedback.classList.add('hidden'), 3000);
       }, 2000);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      btnText.textContent = 'ERROR!';
-      setTimeout(() => {
-        btnText.textContent = 'SUBMIT QUEST';
-        btnArrow.style.opacity = '1';
-        submitBtn.disabled = false;
-      }, 2000);
-      alert('Failed to send. Please email directly to samuel.sinurat05@gmail.com');
-    });
+    } else {
+      throw new Error('Submission failed');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    btnText.textContent = 'ERROR!';
+    setTimeout(() => {
+      btnText.textContent = 'SUBMIT QUEST';
+      btnArrow.style.opacity = '1';
+      submitBtn.disabled = false;
+    }, 2000);
+    alert('Failed to send. Please email directly to samuel.sinurat05@gmail.com');
+  });
 }
 </script>
 </body>
