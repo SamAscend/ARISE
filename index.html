@@ -715,7 +715,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ========== FORM SUBMIT ==========
+// ========== FORM SUBMIT - LANGSUNG KE EMAIL ==========
 function submitForm(e) {
   e.preventDefault();
   
@@ -733,31 +733,48 @@ function submitForm(e) {
     return;
   }
 
-  // Buat mailto link
-  const subject = encodeURIComponent(`[NEW QUEST] ${questTitle} - from ${name}`);
-  const body = encodeURIComponent(
-    `Name: ${name}\n` +
-    `Email: ${email}\n\n` +
-    `Quest Title: ${questTitle}\n\n` +
-    `Quest Details:\n${questDetails}\n\n` +
-    `---\nSent from your portfolio website`
-  );
-  
-  // Buka email client
-  window.location.href = `mailto:samuel.sinurat05@gmail.com?subject=${subject}&body=${body}`;
-  
-  // Tampilkan feedback
-  btnText.textContent = 'OPENING EMAIL...';
-  feedback.classList.remove('hidden');
-  setTimeout(() => {
-    btnText.textContent = 'SUBMIT QUEST';
-    btnArrow.style.opacity = '1';
-    submitBtn.disabled = false;
-    setTimeout(() => feedback.classList.add('hidden'), 3000);
-  }, 1500);
-  
-  // Reset form
-  e.target.reset();
+  submitBtn.disabled = true;
+  btnText.textContent = 'SENDING...';
+  btnArrow.style.opacity = '0';
+
+  // PAKAI FORMSPREE (gratis, reliable)
+  fetch('https://formspree.io/f/xqapjqkv', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      subject: `[NEW QUEST] ${questTitle}`,
+      message: questDetails
+    })
+  })
+  .then(response => {
+    if (response.ok) {
+      btnText.textContent = 'SENT!';
+      feedback.classList.remove('hidden');
+      e.target.reset();
+      setTimeout(() => {
+        btnText.textContent = 'SUBMIT QUEST';
+        btnArrow.style.opacity = '1';
+        submitBtn.disabled = false;
+        setTimeout(() => feedback.classList.add('hidden'), 3000);
+      }, 2000);
+    } else {
+      throw new Error('Failed');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    btnText.textContent = 'ERROR!';
+    setTimeout(() => {
+      btnText.textContent = 'SUBMIT QUEST';
+      btnArrow.style.opacity = '1';
+      submitBtn.disabled = false;
+    }, 2000);
+    alert('Failed to send. Please email directly to samuel.sinurat05@gmail.com');
+  });
 }
 </script>
 </body>
