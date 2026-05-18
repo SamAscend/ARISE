@@ -18,25 +18,114 @@
   --blue:#1d4ed8;--blue-lg:#60a5fa;
   --muted:#2a2a4a;--body:#6e6e9a;--head:#ddddf5;--white:#f0f0ff;
 }
-html{background:var(--bg);}
+html{background:var(--bg);scroll-behavior:smooth;}
 body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--body);overflow-x:hidden;cursor:none;}
 
-/* Cursor */
-#cur{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;mix-blend-mode:screen;}
-#cur .dot{width:8px;height:8px;border-radius:50%;background:var(--purple-lg);box-shadow:0 0 10px 2px var(--purple-lg),0 0 20px 4px var(--purple);transform:translate(-50%,-50%);transition:transform .1s;}
-#cur .ring{width:30px;height:30px;border-radius:50%;border:1px solid rgba(168,85,247,.5);transform:translate(-50%,-50%) translate(-11px,-11px);position:absolute;top:0;left:0;transition:all .2s ease;}
-body:has(a:hover) #cur .ring,body:has(button:hover) #cur .ring{width:48px;height:48px;border-color:rgba(168,85,247,.9);transform:translate(-50%,-50%) translate(-20px,-20px);background:rgba(124,58,237,.06);}
+/* ========== BACKGROUND SHADOW ARMY ========== */
+.shadow-army{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;overflow:hidden;pointer-events:none;opacity:0.25;
+}
+.shadow-figure{
+  position:absolute;bottom:-100px;width:80px;height:120px;background:rgba(168,85,247,0.15);clip-path:polygon(50% 0%, 0% 100%, 100% 100%);filter:blur(4px);
+  animation:shadowWalk 15s linear infinite;
+}
+.shadow-figure:nth-child(1){left:10%;animation-duration:18s;width:60px;height:90px;}
+.shadow-figure:nth-child(2){left:25%;animation-duration:22s;animation-delay:-3s;width:70px;height:105px;}
+.shadow-figure:nth-child(3){left:45%;animation-duration:16s;animation-delay:-7s;width:55px;height:82px;}
+.shadow-figure:nth-child(4){left:65%;animation-duration:20s;animation-delay:-2s;width:85px;height:127px;}
+.shadow-figure:nth-child(5){left:80%;animation-duration:24s;animation-delay:-11s;width:65px;height:97px;}
+.shadow-figure:nth-child(6){left:90%;animation-duration:14s;animation-delay:-5s;width:50px;height:75px;}
+@keyframes shadowWalk{
+  0%{transform:translateY(0) translateX(-20px);opacity:0;}
+  10%{opacity:1;}
+  90%{opacity:1;}
+  100%{transform:translateY(-120vh) translateX(40px);opacity:0;}
+}
+
+/* Background Orbs */
+.bg-orb{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;overflow:hidden;pointer-events:none;
+}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(100px);opacity:0.35;animation:floatOrb 18s ease-in-out infinite;
+}
+.orb-1{width:700px;height:700px;background:#7c3aed;top:-200px;left:-200px;animation-delay:0s;}
+.orb-2{width:800px;height:800px;background:#a855f7;bottom:-300px;right:-250px;animation-delay:-6s;animation-duration:22s;}
+.orb-3{width:550px;height:550px;background:#fbbf24;top:30%;left:15%;animation-delay:-12s;animation-duration:20s;opacity:0.15;}
+@keyframes floatOrb{
+  0%,100%{transform:translate(0,0) scale(1);}
+  33%{transform:translate(60px,-80px) scale(1.1);}
+  66%{transform:translate(-50px,60px) scale(0.95);}
+}
+
+/* Floating Particles */
+.particles{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;overflow:hidden;
+}
+.particle{
+  position:absolute;background:#a855f7;border-radius:50%;animation:floatParticle 10s ease-in-out infinite;
+}
+@keyframes floatParticle{
+  0%{transform:translateY(100vh) rotate(0deg);opacity:0;}
+  10%{opacity:0.4;}
+  90%{opacity:0.4;}
+  100%{transform:translateY(-100px) rotate(360deg);opacity:0;}
+}
+
+/* ARISE Animation */
+.arise-overlay{
+  position:fixed;inset:0;background:rgba(5,5,15,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:all 0.5s;backdrop-filter:blur(8px);
+}
+.arise-overlay.active{opacity:1;visibility:visible;}
+.arise-text{
+  font-family:'Cinzel',serif;font-size:clamp(3rem,10vw,8rem);font-weight:900;color:var(--gold-lg);
+  text-shadow:0 0 30px var(--gold),0 0 60px var(--purple-lg);transform:scale(0.8);opacity:0;
+  transition:all 0.8s cubic-bezier(0.2,0.9,0.4,1.1);
+}
+.arise-overlay.active .arise-text{transform:scale(1);opacity:1;}
+.arise-particle{
+  position:absolute;width:4px;height:4px;background:var(--purple-lg);border-radius:50%;pointer-events:none;
+  animation:ariseParticle 1s ease-out forwards;
+}
+@keyframes ariseParticle{
+  0%{transform:translate(0,0) scale(1);opacity:1;}
+  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0;}
+}
+
+/* Ticker */
+.skills-ticker{
+  overflow:hidden;white-space:nowrap;padding:16px 0;margin:32px 0 0;
+  background:rgba(9,9,26,0.8);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.ticker-track{
+  display:inline-block;animation:tickerLoop 25s linear infinite;
+}
+.ticker-track span{
+  display:inline-block;padding:0 28px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  letter-spacing:0.1em;color:var(--purple-lg);font-weight:500;
+}
+@keyframes tickerLoop{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+
+/* Cursor - DIPERBAIKI */
+#cur{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;transform:translate3d(0,0,0);}
+#cur .dot{width:8px;height:8px;border-radius:50%;background:var(--purple-lg);box-shadow:0 0 10px 2px var(--purple-lg),0 0 20px 4px var(--purple);position:absolute;top:0;left:0;transform:translate(-50%,-50%);}
+#cur .ring{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(168,85,247,0.6);position:absolute;top:0;left:0;transform:translate(-50%,-50%);transition:width 0.2s, height 0.2s, border-color 0.2s, background 0.2s;}
+body:has(a:hover) #cur .ring,body:has(button:hover) #cur .ring{width:46px;height:46px;border-color:var(--purple-lg);background:rgba(168,85,247,0.08);}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:#05050f;}
 ::-webkit-scrollbar-thumb{background:rgba(124,58,237,.5);border-radius:4px;}
 
-/* Progress */
+/* Progress Bar */
 #pbar{position:fixed;top:0;left:0;z-index:9997;height:2px;width:0%;background:linear-gradient(90deg,var(--purple),var(--gold-lg),var(--purple-lg));box-shadow:0 0 10px var(--purple-lg);transition:width .1s linear;}
 
-/* Canvas */
-#particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7;}
+/* Canvas Particles */
+#particles-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;}
 
 /* Fonts */
 .cinzel{font-family:'Cinzel',serif;}
@@ -69,6 +158,35 @@ body:has(a:hover) #cur .ring,body:has(button:hover) #cur .ring{width:48px;height
 /* Skill card */
 .skill-card{background:rgba(14,14,34,.7);border:1px solid rgba(124,58,237,.15);border-radius:8px;transition:border-color .3s,transform .3s,box-shadow .3s;}
 .skill-card:hover{border-color:rgba(124,58,237,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,.1);}
+
+/* Skill Tree */
+.skill-tree-container{background:rgba(5,5,15,0.6);border:1px solid var(--border);border-radius:20px;padding:32px;margin-top:20px;}
+.skill-tree-title{font-family:'Cinzel',serif;color:var(--gold-lg);font-size:1.2rem;margin-bottom:24px;text-align:center;}
+.skill-tree-grid{display:flex;flex-direction:column;gap:20px;align-items:center;}
+.skill-branch{width:100%;max-width:400px;margin:0 auto;}
+.skill-node{display:flex;align-items:center;gap:16px;margin-bottom:16px;padding:12px;background:rgba(14,14,34,.6);border:1px solid var(--border);border-radius:12px;transition:all 0.3s;}
+.skill-node.unlocked{border-color:var(--purple-lg);box-shadow:0 0 12px rgba(168,85,247,0.3);}
+.skill-node-icon{width:40px;height:40px;background:rgba(124,58,237,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.skill-node-info{flex:1;}
+.skill-node-name{font-weight:600;color:var(--head);}
+.skill-node-desc{font-size:0.7rem;color:var(--text-muted);}
+.skill-node-level{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--gold-lg);}
+.skill-connector{margin-left:28px;width:2px;height:20px;background:linear-gradient(to bottom,var(--purple),transparent);margin-bottom:8px;}
+
+/* Timeline Map */
+.timeline-map{background:rgba(5,5,15,0.6);border:1px solid var(--border);border-radius:20px;padding:32px;margin-top:40px;position:relative;}
+.timeline-line{position:absolute;left:50%;top:60px;bottom:60px;width:2px;background:linear-gradient(to bottom,var(--purple),var(--gold),var(--purple));transform:translateX(-50%);}
+.timeline-node{display:flex;align-items:center;margin-bottom:40px;position:relative;}
+.timeline-node:nth-child(odd){flex-direction:row;}
+.timeline-node:nth-child(even){flex-direction:row-reverse;}
+.timeline-dot{width:16px;height:16px;background:var(--purple-lg);border-radius:50%;position:absolute;left:50%;transform:translateX(-50%);box-shadow:0 0 12px var(--purple-lg);z-index:2;}
+.timeline-content{width:45%;padding:20px;background:rgba(14,14,34,.7);border:1px solid var(--border);border-radius:12px;transition:all 0.3s;}
+.timeline-node:nth-child(odd) .timeline-content{margin-right:55%;}
+.timeline-node:nth-child(even) .timeline-content{margin-left:55%;}
+.timeline-content:hover{transform:scale(1.02);border-color:var(--purple-lg);}
+.timeline-year{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--gold-lg);}
+.timeline-title{font-weight:700;color:var(--head);margin:8px 0 4px;}
+.timeline-desc{font-size:0.75rem;color:var(--text-muted);}
 
 /* Quest card */
 .quest-card{background:rgba(14,14,34,.7);border:1px solid rgba(124,58,237,.1);clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));transition:all .35s;position:relative;overflow:hidden;}
@@ -150,23 +268,90 @@ nav{backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) 
 ::selection{background:rgba(124,58,237,.3);color:var(--purple-lg);}
 .dot-live{width:7px;height:7px;border-radius:50%;background:var(--purple-lg);box-shadow:0 0 8px var(--purple-lg);animation:pulseDot 2s ease-in-out infinite;}
 .scan-line{position:absolute;inset-x:0;height:60px;pointer-events:none;background:linear-gradient(to bottom,transparent,rgba(124,58,237,.04),transparent);animation:scan 6s ease-in-out infinite;}
+
+/* Shadow Drawer */
+.shadow-drawer{
+  position:fixed;right:0;top:0;bottom:0;width:320px;background:rgba(9,9,26,0.95);backdrop-filter:blur(12px);
+  border-left:2px solid var(--purple-lg);transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+  z-index:200;padding:100px 28px;box-shadow:-4px 0 20px rgba(0,0,0,0.5);
+}
+.shadow-drawer.open{transform:translateX(0);}
+.drawer-handle{
+  position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:40px;height:80px;
+  background:rgba(9,9,26,0.95);border:2px solid var(--purple-lg);border-right:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;
+}
+.drawer-handle:hover{background:rgba(124,58,237,0.2);}
+.drawer-handle span{writing-mode:vertical-rl;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--purple-lg);}
+.drawer-content h4{font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.15em;margin-bottom:24px;color:var(--gold-lg);}
+.drawer-fact{font-size:0.85rem;color:var(--body);line-height:1.6;margin-bottom:24px;}
+.drawer-quote{font-style:italic;border-left:2px solid var(--purple-lg);padding-left:16px;font-size:0.75rem;color:var(--purple-lg);}
+
+/* Responsive */
+@media(max-width:900px){
+  .navbar{padding:16px 24px;}
+  .nav-links{display:none;}
+  .container{padding:100px 24px 60px;}
+  .hero{grid-template-columns:1fr;gap:40px;}
+  .education-grid{grid-template-columns:1fr;}
+  .skills-grid{grid-template-columns:1fr;}
+  .interests-grid{grid-template-columns:repeat(2,1fr);}
+  .shadow-drawer{display:none;}
+  .timeline-line{left:20px;}
+  .timeline-node:nth-child(odd),.timeline-node:nth-child(even){flex-direction:row;}
+  .timeline-dot{left:20px;}
+  .timeline-content{width:80%;margin-left:40px !important;margin-right:0 !important;}
+}
+@media(max-width:600px){
+  .interests-grid{grid-template-columns:1fr;}
+  .hero-stats{flex-wrap:wrap;gap:24px;}
+  .btn-group{flex-wrap:wrap;}
+  .contact-section{padding:32px 24px;}
+  footer{flex-direction:column;gap:12px;text-align:center;}
+}
 </style>
 </head>
 <body>
 
+<!-- SHADOW ARMY BACKGROUND -->
+<div class="shadow-army">
+  <div class="shadow-figure"></div>
+  <div class="shadow-figure"></div>
+  <div class="shadow-figure"></div>
+  <div class="shadow-figure"></div>
+  <div class="shadow-figure"></div>
+  <div class="shadow-figure"></div>
+</div>
+
+<!-- BACKGROUND ORBS -->
+<div class="bg-orb">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- FLOATING PARTICLES -->
+<div class="particles" id="particles"></div>
+
+<!-- ARISE OVERLAY -->
+<div id="ariseOverlay" class="arise-overlay">
+  <div class="arise-text">ARISE.</div>
+</div>
+
+<canvas id="particles-bg"></canvas>
 <div id="cur"><div class="dot"></div><div class="ring"></div></div>
 <div id="pbar"></div>
-<canvas id="particles"></canvas>
 
-<!-- ═══ NAV ═══ -->
+<!-- NAVBAR -->
 <nav class="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4">
   <div class="max-w-6xl mx-auto flex items-center justify-between">
     <a href="#hero" class="cinzel text-sm font-bold text-head tracking-widest" style="text-decoration:none">SM<span class="text-purple">◆</span></a>
     <div class="hidden md:flex items-center gap-10">
-      <a href="#about"    class="nav-link">Status</a>
+      <a href="#about" class="nav-link">Status</a>
       <a href="#projects" class="nav-link">Quests</a>
-      <a href="#skills"   class="nav-link">Abilities</a>
-      <a href="#contact"  class="nav-link">Contact</a>
+      <a href="#skills" class="nav-link">Abilities</a>
+      <a href="#skilltree" class="nav-link">Skill Tree</a>
+      <a href="#contact" class="nav-link">Contact</a>
     </div>
     <div class="hidden md:flex items-center gap-2 sys text-xs text-body">
       <div class="dot-live"></div><span>AVAILABLE — S-Rank Open</span>
@@ -177,221 +362,164 @@ nav{backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) 
   </div>
   <div id="mob-nav" class="md:hidden">
     <div class="flex flex-col gap-5 pt-5 pb-2 px-1">
-      <a href="#about"    class="nav-link">Status</a>
+      <a href="#about" class="nav-link">Status</a>
       <a href="#projects" class="nav-link">Quests</a>
-      <a href="#skills"   class="nav-link">Abilities</a>
-      <a href="#contact"  class="nav-link">Contact</a>
+      <a href="#skills" class="nav-link">Abilities</a>
+      <a href="#skilltree" class="nav-link">Skill Tree</a>
+      <a href="#contact" class="nav-link">Contact</a>
     </div>
   </div>
 </nav>
 
-<!-- ═══ HERO ═══ -->
-<!-- ═══ HERO ═══ -->
+<!-- HERO SECTION -->
 <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
   <div class="hero-vignette"></div>
   <div class="scan-line" style="top:0"></div>
-
+  <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/3 items-center justify-center hidden lg:flex opacity-35" style="width:320px;height:320px">
+    <div class="hero-rune absolute" style="inset:0"></div>
+    <div class="hero-rune-inner absolute" style="top:60px;left:60px"></div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="opacity:.7">
+      <polygon points="40,5 55,28 75,28 60,45 67,68 40,55 13,68 20,45 5,28 25,28" fill="none" stroke="rgba(168,85,247,.5)" stroke-width=".8"/>
+      <circle cx="40" cy="40" r="12" fill="none" stroke="rgba(168,85,247,.4)" stroke-width=".8"/>
+      <circle cx="40" cy="40" r="3" fill="rgba(168,85,247,.8)"/>
+    </svg>
+  </div>
   <div class="relative z-10 max-w-6xl mx-auto px-6 md:px-12 w-full pt-20">
-    <div class="anim-fade-up d1 mb-6">
-      <div class="system-notif">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,10 1,10" fill="none" stroke="rgba(168,85,247,.8)" stroke-width="1"/><line x1="6" y1="5" x2="6" y2="7.5" stroke="rgba(168,85,247,.8)" stroke-width=".8"/><circle cx="6" cy="9" r=".6" fill="rgba(168,85,247,.8)"/></svg>
-        <span class="sys text-xs tracking-widest" style="color:rgba(168,85,247,.8)">SYSTEM</span>
-        <span class="sys text-xs" style="color:rgba(110,110,154,.7)">// A new player has entered the field.</span>
+    <div class="anim-fade-up d1 mb-6"><div class="system-notif"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polygon points="6,1 11,10 1,10" fill="none" stroke="rgba(168,85,247,.8)" stroke-width="1"/><line x1="6" y1="5" x2="6" y2="7.5" stroke="rgba(168,85,247,.8)" stroke-width=".8"/><circle cx="6" cy="9" r=".6" fill="rgba(168,85,247,.8)"/></svg><span class="sys text-xs tracking-widest" style="color:rgba(168,85,247,.8)">SYSTEM</span><span class="sys text-xs" style="color:rgba(110,110,154,.7)">// A new player has entered the field.</span></div></div>
+    <div class="anim-fade-up d2 mb-4"><span class="awakened-tag">◆ RANK S — FULL STACK & AI DEVELOPER ◆</span></div>
+    <div class="flex items-center justify-center gap-6 flex-wrap anim-fade-up d3">
+      <h1 class="hero-title title-flicker">SAMUEL<br><span class="name-glow">MAHANAIM</span><span style="color:var(--purple-lg);text-shadow:0 0 20px var(--purple-lg)">.</span></h1>
+      <div class="relative group flex-shrink-0"><div class="absolute -inset-1 bg-gradient-to-r from-purple-500/40 to-gold-500/40 rounded-full blur-md opacity-60 group-hover:opacity-100 transition"></div><img src="images/Me.jpeg" alt="Samuel" class="relative w-40 h-40 md:w-56 md:h-56 rounded-full object-cover border border-purple-500/40 shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/70"></div>
+    </div>
+    <div class="anim-fade-up d4 mt-4 flex items-center gap-2 sys text-sm text-body"><span style="color:rgba(168,85,247,.5)">&gt;&gt;</span><span id="tw"></span><span style="color:var(--purple-lg);animation:flicker 1.2s step-end infinite">▌</span></div>
+    <p class="anim-fade-up d5 mt-5 text-body leading-relaxed max-w-lg" style="font-size:1rem">Awakened Full Stack & AI Developer. I architect intelligent systems, build scalable backends, and craft seamless interfaces.</p>
+    <div class="anim-fade-up d5 mt-6 flex flex-wrap gap-6"><div class="stat-inline"><span style="color:var(--purple-lg)">EXP</span>&nbsp;<span class="text-head" style="font-weight:600">~3 YRS</span></div><div style="width:1px;background:rgba(124,58,237,.3)"></div><div class="stat-inline"><span style="color:var(--gold-lg)">QUESTS</span>&nbsp;<span class="text-head" style="font-weight:600">44</span></div><div style="width:1px;background:rgba(124,58,237,.3)"></div><div class="stat-inline"><span style="color:var(--blue-lg)">GUILD</span>&nbsp;<span class="text-head" style="font-weight:600">Jakarta, ID</span></div></div>
+    <div class="anim-fade-up d6 mt-8 flex flex-wrap items-center gap-5"><a href="#projects" class="btn-sys"><span>View Quests</span><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  </div>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 anim-fade-in d8"><div style="width:1px;height:40px;background:linear-gradient(to bottom,rgba(124,58,237,.6),transparent)"></div><span class="sys text-xs tracking-widest" style="color:rgba(110,110,154,.4)">SCROLL</span></div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section id="about" class="relative py-28 md:py-36 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 md:gap-20 items-start">
+      <div>
+        <p class="sec-label reveal">[ PLAYER STATUS ]</p>
+        <h2 class="cinzel reveal rd1 text-head mt-4 leading-tight" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">About the<br><span class="text-purple">Hunter</span></h2>
+        <div class="grad-line my-6 reveal rd2"></div>
+        <p class="reveal rd2 text-body leading-relaxed mb-4">Full Stack & AI Developer dengan passion membangun sistem cerdas yang scalable. Hampir 3 tahun pengalaman menghadapi berbagai dungeon: dari legacy systems, real-time architecture, hingga implementasi AI/LLM.</p>
+        <p class="reveal rd3 text-body leading-relaxed mb-8" style="font-size:.9rem">Seperti Sung Jin-Woo yang terus naik level, saya percaya konsistensi, adaptasi, dan continuous learning adalah kunci untuk menjadi developer kelas dunia — terutama di era AI yang bergerak cepat.</p>
+        <div id="stat-section" class="reveal rd3 space-y-4">
+          <div><div class="flex justify-between items-center mb-1"><span class="sys text-xs" style="color:var(--purple-lg)">STRENGTH — Full Stack</span><span class="sys text-xs text-body">92</span></div><div class="stat-bar-wrap"><div class="stat-bar-fill" data-pct=".92"></div></div></div>
+          <div><div class="flex justify-between items-center mb-1"><span class="sys text-xs" style="color:var(--gold-lg)">INTELLIGENCE — AI/ML</span><span class="sys text-xs text-body">85</span></div><div class="stat-bar-wrap"><div class="stat-bar-fill gold" data-pct=".85"></div></div></div>
+          <div><div class="flex justify-between items-center mb-1"><span class="sys text-xs" style="color:var(--blue-lg)">AGILITY — DevOps</span><span class="sys text-xs text-body">78</span></div><div class="stat-bar-wrap"><div class="stat-bar-fill blue" data-pct=".78"></div></div></div>
+          <div><div class="flex justify-between items-center mb-1"><span class="sys text-xs" style="color:var(--purple-lg)">SENSE — System Design</span><span class="sys text-xs text-body">88</span></div><div class="stat-bar-wrap"><div class="stat-bar-fill" data-pct=".88"></div></div></div>
+        </div>
       </div>
+      <div class="reveal rd2"><div class="sys-window p-6 relative"><div class="sys-corner-br">◆</div><div class="flex items-center justify-between mb-5 pb-4" style="border-bottom:1px solid rgba(124,58,237,.15)"><div class="flex items-center gap-3"><span class="rank rank-s">S</span><div><div class="cinzel text-head font-bold text-sm tracking-wider">SAMUEL MAHANAIM</div><div class="sys text-xs text-body">Full Stack & AI Developer</div></div></div><div style="text-align:right"><div class="sys text-xs text-gold mb-1">LV. 44</div><div style="width:60px;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden"><div style="width:68%;height:100%;background:linear-gradient(90deg,#d97706,#fbbf24);box-shadow:0 0 6px #fbbf24;border-radius:2px"></div></div></div></div>
+        <div class="space-y-0 mb-5"><div class="status-row"><span class="status-key">Name</span><span class="status-val">Samuel Mahanaim Sinurat</span></div><div class="status-row"><span class="status-key">Class</span><span class="status-val text-purple">Full Stack & AI Dev</span></div><div class="status-row"><span class="status-key">Guild</span><span class="status-val">Jakarta, Indonesia</span></div><div class="status-row"><span class="status-key">EXP</span><span class="status-val text-gold">3 Years</span></div><div class="status-row"><span class="status-key">Quests</span><span class="status-val">44 Cleared</span></div><div class="status-row" style="border:none"><span class="status-key">Status</span><div class="flex items-center gap-2"><div class="dot-live"></div><span class="status-val text-purple" style="font-size:.85rem">AVAILABLE</span></div></div></div>
+        <div style="border-top:1px solid rgba(124,58,237,.12);padding-top:16px"><div class="sys text-xs mb-3" style="color:rgba(110,110,154,.5);letter-spacing:.15em">TITLES UNLOCKED</div><div class="flex flex-wrap gap-2"><span class="ability"><span class="adot"></span>AI Architect</span><span class="ability"><span class="adot"></span>Bug Slayer</span><span class="ability"><span class="adot"></span>Solo Coder</span><span class="ability"><span class="adot"></span>Prompt Master</span></div></div>
+      </div></div>
     </div>
-
-    <div class="anim-fade-up d2 mb-4">
-      <span class="awakened-tag">◆ RANK S — FULL STACK & AI DEVELOPER ◆</span>
-    </div>
-<div class="flex items-center justify-center gap-6 flex-wrap anim-fade-up d3">
-  <h1 class="hero-title title-flicker">
-    SAMUEL<br>
-    <span class="name-glow">MAHANAIM</span><span style="color:var(--purple-lg);text-shadow:0 0 20px var(--purple-lg)">.</span>
-  </h1>
-  <div class="relative group flex-shrink-0">
-    <div class="absolute -inset-1 bg-gradient-to-r from-purple-500/40 to-gold-500/40 rounded-full blur-md opacity-60 group-hover:opacity-100 transition"></div>
-    <img src="images/Me.jpeg" alt="Samuel" 
-         class="relative w-40 h-40 md:w-56 md:h-56 rounded-full object-cover border border-purple-500/40 shadow-xl
-                transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/70">
-  </div>
-</div>
-
-    <div class="anim-fade-up d4 mt-4 flex items-center gap-2 sys text-sm text-body">
-      <span style="color:rgba(168,85,247,.5)">&gt;&gt;</span>
-      <span id="tw"></span><span style="color:var(--purple-lg);animation:flicker 1.2s step-end infinite">▌</span>
-    </div>
-
-    <p class="anim-fade-up d5 mt-5 text-body leading-relaxed max-w-lg" style="font-size:1rem">
-      Awakened Full Stack & AI Developer. I architect intelligent systems, build scalable backends, and craft seamless interfaces.
-    </p>
-
-    <div class="anim-fade-up d5 mt-6 flex flex-wrap gap-6">
-      <div class="stat-inline"><span style="color:var(--purple-lg)">EXP</span>&nbsp;<span class="text-head" style="font-weight:600">~3 YRS</span></div>
-      <div style="width:1px;background:rgba(124,58,237,.3)"></div>
-      <div class="stat-inline"><span style="color:var(--gold-lg)">QUESTS</span>&nbsp;<span class="text-head" style="font-weight:600">44</span></div>
-      <div style="width:1px;background:rgba(124,58,237,.3)"></div>
-      <div class="stat-inline"><span style="color:var(--blue-lg)">GUILD</span>&nbsp;<span class="text-head" style="font-weight:600">Jakarta, ID</span></div>
-    </div>
-
-    <div class="anim-fade-up d6 mt-8 flex flex-wrap items-center gap-5">
-      <a href="#projects" class="btn-sys">
-        <span>View Quests</span>
-        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a href="#contact" class="sys text-xs tracking-widest" style="color:var(--body);display:inline-flex;align-items:center;gap:8px;transition:color .3s;text-decoration:none" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color='var(--body)'">
-        SEND MESSAGE <span>◆</span>
-      </a>
-    </div>
-  </div>
-
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 anim-fade-in d8">
-    <div style="width:1px;height:40px;background:linear-gradient(to bottom,rgba(124,58,237,.6),transparent)"></div>
-    <span class="sys text-xs tracking-widest" style="color:rgba(110,110,154,.4)">SCROLL</span>
   </div>
 </section>
 
-<!-- ═══ SKILLS ═══ -->
+<div class="grad-line mx-6 md:mx-12 opacity-40"></div>
+
+<!-- PROJECTS SECTION -->
+<section id="projects" class="relative py-28 md:py-36 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14"><div><p class="sec-label reveal">[ QUEST LOG ]</p><h2 class="cinzel reveal rd1 text-head mt-4" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">44 <span class="text-purple">Cleared Dungeons</span></h2></div><span class="sys text-xs text-body hidden md:block reveal" style="text-align:right;max-width:220px">Total quests completed: 44 dungeons conquered.</span></div>
+    <div class="space-y-4">
+      <div class="quest-card reveal p-6 md:p-8 group"><div class="flex flex-col md:flex-row md:items-start gap-6"><div class="flex-1"><div class="flex items-center gap-3 mb-3"><span class="rank rank-s">S</span><span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — RANK S</span><div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div></div><h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple">AI Document Assistant</h3><p class="text-body text-sm leading-relaxed mb-4 max-w-lg">RAG-based intelligent document QA system using LlamaIndex, OpenAI embeddings, and ChromaDB.</p><div class="flex flex-wrap gap-2 mb-5"><span class="ability"><span class="adot"></span>Python</span><span class="ability"><span class="adot"></span>LangChain</span><span class="ability"><span class="adot"></span>OpenAI API</span><span class="ability"><span class="adot"></span>ChromaDB</span><span class="ability"><span class="adot"></span>FastAPI</span></div></div></div></div>
+      <div class="quest-card reveal rd1 p-6 md:p-8 group"><div class="flex flex-col md:flex-row md:items-start gap-6"><div class="flex-1"><div class="flex items-center gap-3 mb-3"><span class="rank rank-s">S</span><span class="sys text-xs" style="color:rgba(245,158,11,.5)">DUNGEON — RANK S</span><div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div></div><h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple">Full-Stack E-Commerce Platform</h3><p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Platform e-commerce lengkap dengan authentication, payment gateway, cart system, order tracking.</p><div class="flex flex-wrap gap-2 mb-5"><span class="ability"><span class="adot"></span>Next.js</span><span class="ability"><span class="adot"></span>Node.js</span><span class="ability"><span class="adot"></span>PostgreSQL</span><span class="ability"><span class="adot"></span>Redis</span><span class="ability"><span class="adot"></span>Midtrans</span></div></div></div></div>
+      <div class="quest-card reveal rd1 p-6 md:p-8 group"><div class="flex flex-col md:flex-row md:items-start gap-6"><div class="flex-1"><div class="flex items-center gap-3 mb-3"><span class="rank rank-a">A</span><span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span><div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div></div><h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple">Real-time Chat Application</h3><p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Chat app real-time dengan WebSocket, room management, typing indicators, online status, dan file sharing.</p><div class="flex flex-wrap gap-2 mb-5"><span class="ability"><span class="adot"></span>Socket.io</span><span class="ability"><span class="adot"></span>React</span><span class="ability"><span class="adot"></span>Express</span><span class="ability"><span class="adot"></span>MongoDB</span></div></div></div></div>
+      <div class="quest-card reveal rd2 p-6 md:p-8 group"><div class="flex flex-col md:flex-row md:items-start gap-6"><div class="flex-1"><div class="flex items-center gap-3 mb-3"><span class="rank rank-a">A</span><span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span><div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div></div><h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple">AI Image Generation Service</h3><p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Service untuk generate gambar menggunakan Stable Diffusion API dengan queue system.</p><div class="flex flex-wrap gap-2 mb-5"><span class="ability"><span class="adot"></span>Python</span><span class="ability"><span class="adot"></span>Replicate API</span><span class="ability"><span class="adot"></span>Redis Queue</span><span class="ability"><span class="adot"></span>Next.js</span></div></div></div></div>
+      <div class="quest-card reveal rd2 p-6 md:p-8 group"><div class="flex flex-col md:flex-row md:items-start gap-6"><div class="flex-1"><div class="flex items-center gap-3 mb-3"><span class="rank rank-a">A</span><span class="sys text-xs" style="color:rgba(168,85,247,.5)">DUNGEON — RANK A</span><div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div></div><h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple">Headless CMS Portfolio</h3><p class="text-body text-sm leading-relaxed mb-4 max-w-lg">Portfolio dengan headless CMS (Strapi) + frontend Next.js, markdown blog support.</p><div class="flex flex-wrap gap-2 mb-5"><span class="ability"><span class="adot"></span>Next.js</span><span class="ability"><span class="adot"></span>Strapi</span><span class="ability"><span class="adot"></span>GraphQL</span><span class="ability"><span class="adot"></span>Tailwind</span></div></div></div></div>
+      <div class="quest-card reveal rd3 p-6 md:p-8 group"><div class="flex flex-col md:flex-row md:items-start gap-6"><div class="flex-1"><div class="flex items-center gap-3 mb-3"><span class="rank rank-b">B</span><span class="sys text-xs" style="color:rgba(96,165,250,.5)">DUNGEON — RANK B</span><div class="flex-1 h-px" style="background:rgba(124,58,237,.1)"></div></div><h3 class="cinzel text-head text-xl font-bold mb-2 group-hover:text-purple">Task Management REST API</h3><p class="text-body text-sm leading-relaxed mb-4 max-w-lg">RESTful API untuk task management dengan authentication JWT, role-based access.</p><div class="flex flex-wrap gap-2 mb-5"><span class="ability"><span class="adot"></span>Node.js</span><span class="ability"><span class="adot"></span>Express</span><span class="ability"><span class="adot"></span>JWT</span><span class="ability"><span class="adot"></span>MongoDB</span></div></div></div></div>
+    </div>
+    <div class="skills-ticker mt-12"><div class="ticker-track"><span>✦ Full Stack Development</span><span>✦ AI Engineering</span><span>✦ System Architecture</span><span>✦ API Design</span><span>✦ Cloud Deployment</span><span>✦ Problem Solving</span><span>✦ Full Stack Development</span><span>✦ AI Engineering</span><span>✦ System Architecture</span><span>✦ API Design</span><span>✦ Cloud Deployment</span><span>✦ Problem Solving</span></div></div>
+  </div>
+</section>
+
+<div class="grad-line mx-6 md:mx-12 opacity-40"></div>
+
+<!-- SKILL TREE SECTION -->
+<section id="skilltree" class="relative py-28 md:py-36 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto">
+    <p class="sec-label reveal">[ SKILL TREE ]</p>
+    <h2 class="cinzel reveal rd1 text-head mt-4 mb-8" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">Unlocked <span class="text-purple">Perks</span></h2>
+    <div class="skill-tree-container reveal">
+      <div class="skill-tree-title">✦ SHADOW MONARCH SKILL TREE ✦</div>
+      <div class="skill-tree-grid">
+        <div class="skill-branch">
+          <div class="skill-node unlocked"><div class="skill-node-icon">⚔️</div><div class="skill-node-info"><div class="skill-node-name">Shadow Extraction</div><div class="skill-node-desc">Build AI systems from ground up</div></div><div class="skill-node-level">MAX</div></div>
+          <div class="skill-connector"></div>
+          <div class="skill-node unlocked"><div class="skill-node-icon">🛡️</div><div class="skill-node-info"><div class="skill-node-name">Monarch's Domain</div><div class="skill-node-desc">Full-stack architecture mastery</div></div><div class="skill-node-level">Lv.5</div></div>
+          <div class="skill-connector"></div>
+          <div class="skill-node"><div class="skill-node-icon">👑</div><div class="skill-node-info"><div class="skill-node-name">Dragon's Fear</div><div class="skill-node-desc">Enterprise-level system design</div></div><div class="skill-node-level">LOCKED</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE MAP -->
+<section class="relative py-28 md:py-36 px-6 md:px-12">
+  <div class="max-w-6xl mx-auto">
+    <p class="sec-label reveal">[ JOURNEY MAP ]</p>
+    <h2 class="cinzel reveal rd1 text-head mt-4 mb-8" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">Adventure <span class="text-purple">Timeline</span></h2>
+    <div class="timeline-map reveal">
+      <div class="timeline-line"></div>
+      <div class="timeline-node"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2023</div><div class="timeline-title">First Quest: PUnten</div><div class="timeline-desc">Built food ordering platform for campus community. Won 1st place at Campus Project Exhibition.</div></div></div>
+      <div class="timeline-node"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2025</div><div class="timeline-title">AI Engineer @ LapisAI</div><div class="timeline-desc">Developed AI-powered chatbot assistant using Python, LLM, and RAG.</div></div></div>
+      <div class="timeline-node"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2025-2026</div><div class="timeline-title">Frontend Developer @ Sagara</div><div class="timeline-desc">Built responsive UIs, integrated APIs, optimized web performance.</div></div></div>
+      <div class="timeline-node"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2026</div><div class="timeline-title">Lead Developer — Sagara Revamp</div><div class="timeline-desc">Led complete digital transformation with AI chatbot, CMS, and sales dashboard.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS SECTION -->
 <section id="skills" class="relative py-28 md:py-36 px-6 md:px-12">
   <div class="max-w-6xl mx-auto">
     <p class="sec-label reveal">[ SKILL WINDOW ]</p>
-    <h2 class="cinzel reveal rd1 text-head mt-4 mb-14" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
-      Acquired <span class="text-purple">Abilities</span>
-    </h2>
+    <h2 class="cinzel reveal rd1 text-head mt-4 mb-14" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">Acquired <span class="text-purple">Abilities</span></h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-      <div class="skill-card reveal p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Artificial Intelligence</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>LangChain</span>
-          <span class="ability"><span class="adot"></span>OpenAI API</span>
-          <span class="ability"><span class="adot"></span>RAG Systems</span>
-          <span class="ability"><span class="adot"></span>Prompt Engineering</span>
-          <span class="ability"><span class="adot"></span>LlamaIndex</span>
-          <span class="ability"><span class="adot"></span>Vector DB</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Frontend</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>React</span>
-          <span class="ability"><span class="adot"></span>Next.js</span>
-          <span class="ability"><span class="adot"></span>TypeScript</span>
-          <span class="ability"><span class="adot"></span>Tailwind CSS</span>
-          <span class="ability"><span class="adot"></span>Vue.js</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd1 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Backend</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>Node.js</span>
-          <span class="ability"><span class="adot"></span>Express</span>
-          <span class="ability"><span class="adot"></span>Python</span>
-          <span class="ability"><span class="adot"></span>FastAPI</span>
-          <span class="ability"><span class="adot"></span>GraphQL</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd1 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-a">A</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Database & ORM</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>PostgreSQL</span>
-          <span class="ability"><span class="adot"></span>MongoDB</span>
-          <span class="ability"><span class="adot"></span>Redis</span>
-          <span class="ability"><span class="adot"></span>Prisma</span>
-          <span class="ability"><span class="adot"></span>Supabase</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd2 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-b">B</span><span class="cinzel text-head text-sm font-semibold tracking-wide">DevOps & Cloud</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>Docker</span>
-          <span class="ability"><span class="adot"></span>Vercel</span>
-          <span class="ability"><span class="adot"></span>Railway</span>
-          <span class="ability"><span class="adot"></span>GitHub Actions</span>
-        </div>
-      </div>
-
-      <div class="skill-card reveal rd3 p-5">
-        <div class="flex items-center gap-3 mb-4"><span class="rank rank-b">B</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Tools & Others</span></div>
-        <div class="flex flex-wrap gap-2">
-          <span class="ability"><span class="adot"></span>Git</span>
-          <span class="ability"><span class="adot"></span>Figma</span>
-          <span class="ability"><span class="adot"></span>Postman</span>
-          <span class="ability"><span class="adot"></span>Linux</span>
-        </div>
-      </div>
+      <div class="skill-card reveal p-5"><div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Artificial Intelligence</span></div><div class="flex flex-wrap gap-2"><span class="ability"><span class="adot"></span>LangChain</span><span class="ability"><span class="adot"></span>OpenAI API</span><span class="ability"><span class="adot"></span>RAG Systems</span><span class="ability"><span class="adot"></span>Prompt Engineering</span><span class="ability"><span class="adot"></span>LlamaIndex</span><span class="ability"><span class="adot"></span>Vector DB</span></div></div>
+      <div class="skill-card reveal p-5"><div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Frontend</span></div><div class="flex flex-wrap gap-2"><span class="ability"><span class="adot"></span>React</span><span class="ability"><span class="adot"></span>Next.js</span><span class="ability"><span class="adot"></span>TypeScript</span><span class="ability"><span class="adot"></span>Tailwind CSS</span><span class="ability"><span class="adot"></span>Vue.js</span></div></div>
+      <div class="skill-card reveal rd1 p-5"><div class="flex items-center gap-3 mb-4"><span class="rank rank-s">S</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Backend</span></div><div class="flex flex-wrap gap-2"><span class="ability"><span class="adot"></span>Node.js</span><span class="ability"><span class="adot"></span>Express</span><span class="ability"><span class="adot"></span>Python</span><span class="ability"><span class="adot"></span>FastAPI</span><span class="ability"><span class="adot"></span>GraphQL</span></div></div>
+      <div class="skill-card reveal rd1 p-5"><div class="flex items-center gap-3 mb-4"><span class="rank rank-a">A</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Database & ORM</span></div><div class="flex flex-wrap gap-2"><span class="ability"><span class="adot"></span>PostgreSQL</span><span class="ability"><span class="adot"></span>MongoDB</span><span class="ability"><span class="adot"></span>Redis</span><span class="ability"><span class="adot"></span>Prisma</span><span class="ability"><span class="adot"></span>Supabase</span></div></div>
+      <div class="skill-card reveal rd2 p-5"><div class="flex items-center gap-3 mb-4"><span class="rank rank-b">B</span><span class="cinzel text-head text-sm font-semibold tracking-wide">DevOps & Cloud</span></div><div class="flex flex-wrap gap-2"><span class="ability"><span class="adot"></span>Docker</span><span class="ability"><span class="adot"></span>Vercel</span><span class="ability"><span class="adot"></span>Railway</span><span class="ability"><span class="adot"></span>GitHub Actions</span></div></div>
+      <div class="skill-card reveal rd3 p-5"><div class="flex items-center gap-3 mb-4"><span class="rank rank-b">B</span><span class="cinzel text-head text-sm font-semibold tracking-wide">Tools & Others</span></div><div class="flex flex-wrap gap-2"><span class="ability"><span class="adot"></span>Git</span><span class="ability"><span class="adot"></span>Figma</span><span class="ability"><span class="adot"></span>Postman</span><span class="ability"><span class="adot"></span>Linux</span></div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ CONTACT ═══ -->
+<!-- CONTACT SECTION -->
 <section id="contact" class="relative py-28 md:py-36 px-6 md:px-12 overflow-hidden">
   <div style="position:absolute;bottom:-200px;right:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.08) 0%,transparent 70%);pointer-events:none"></div>
   <div class="max-w-6xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
       <div>
         <p class="sec-label reveal">[ SEND MESSAGE ]</p>
-        <h2 class="cinzel reveal rd1 text-head mt-4 leading-tight" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">
-          Start a<br><span class="text-purple">New Quest</span>
-        </h2>
-        <p class="reveal rd2 text-body leading-relaxed mt-5 mb-8 max-w-sm text-sm">
-          Freelance, full-time, atau diskusi soal AI & tech — saya selalu open untuk opportunity baru. Kirim pesan dan kita mulai perjalanan.
-        </p>
+        <h2 class="cinzel reveal rd1 text-head mt-4 leading-tight" style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700">Start a<br><span class="text-purple">New Quest</span></h2>
+        <p class="reveal rd2 text-body leading-relaxed mt-5 mb-8 max-w-sm text-sm">Freelance, full-time, or just a chat about AI & tech — I'm always open to new opportunities and interesting conversations.</p>
         <div class="reveal rd3 space-y-4">
-          <a href="mailto:samuel.sinurat05@gmail.com" class="flex items-center gap-4" style="text-decoration:none">
-            <div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="rgba(168,85,247,.7)" stroke-width="1"/><path d="M1 4l6 4.5L13 4" stroke="rgba(168,85,247,.7)" stroke-width="1" stroke-linecap="round"/></svg>
-            </div>
-            <span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">samuel.sinurat05@gmail.com</span>
-          </a>
-          <a href="https://github.com/SamAscend" target="_blank" class="flex items-center gap-4" style="text-decoration:none">
-            <div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" stroke="rgba(168,85,247,.7)" stroke-width="1.4"/></svg>
-            </div>
-            <span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">github.com/SamAscend</span>
-          </a>
-          <a href="https://www.linkedin.com/in/samuel-mahanaim-sinurat-25736034a" target="_blank" class="flex items-center gap-4" style="text-decoration:none">
-            <div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" stroke="rgba(168,85,247,.7)" stroke-width="1.4"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7" stroke="rgba(168,85,247,.7)" stroke-width="1.4" stroke-linecap="round"/></svg>
-            </div>
-            <span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">linkedin.com/in/samuel-mahanaim</span>
-          </a>
+          <a href="mailto:samuel.sinurat05@gmail.com" class="flex items-center gap-4" style="text-decoration:none"><div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="rgba(168,85,247,.7)" stroke-width="1"/><path d="M1 4l6 4.5L13 4" stroke="rgba(168,85,247,.7)" stroke-width="1" stroke-linecap="round"/></svg></div><span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">samuel.sinurat05@gmail.com</span></a>
+          <a href="https://github.com/SamAscend" target="_blank" class="flex items-center gap-4" style="text-decoration:none"><div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" stroke="rgba(168,85,247,.7)" stroke-width="1.4"/></svg></div><span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">github.com/SamAscend</span></a>
+          <a href="https://www.linkedin.com/in/samuel-mahanaim-sinurat-25736034a" target="_blank" class="flex items-center gap-4" style="text-decoration:none"><div style="width:40px;height:40px;background:rgba(14,14,34,.8);border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);transition:all .3s" onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(124,58,237,.15)'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" stroke="rgba(168,85,247,.7)" stroke-width="1.4"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7" stroke="rgba(168,85,247,.7)" stroke-width="1.4" stroke-linecap="round"/></svg></div><span class="sys text-xs text-body" style="transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color=''">linkedin.com/in/samuel-mahanaim</span></a>
         </div>
       </div>
-
-      <div class="reveal rd2">
-        <div class="sys-window p-6 md:p-8 relative">
-          <div class="sys-corner-br">◆</div>
-          <div class="sys text-xs mb-6" style="color:rgba(110,110,154,.4);letter-spacing:.2em">// NEW_QUEST_SUBMISSION</div>
-          <form id="cf" onsubmit="submitForm(event)" class="flex flex-col gap-4">
-            <div>
-              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">PLAYER_NAME</label>
-              <input type="text" id="playerName" class="c-input" required/>
-            </div>
-            <div>
-              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">CONTACT_POINT (Gmail only)</label>
-              <input type="email" id="playerEmail" class="c-input" required/>
-              <div id="emailError" class="sys text-xs mt-1 hidden" style="color:#ef4444;">Email harus menggunakan @gmail.com</div>
-            </div>
-            <div>
-              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">QUEST_TITLE</label>
-              <input type="text" id="questTitle" class="c-input"/>
-            </div>
-            <div>
-              <label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">QUEST_DETAILS</label>
-              <textarea id="questDetails" rows="4" class="c-input" style="resize:none" required></textarea>
-            </div>
-            <button type="submit" class="btn-sys justify-center mt-2" id="submitBtn">
-              <span id="btn-t">SUBMIT QUEST</span>
-              <svg id="btn-a" width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div id="fs" class="hidden sys text-xs text-center" style="color:var(--purple-lg);padding:8px;letter-spacing:.1em">◆ QUEST ACCEPTED — RESPONSE INCOMING ◆</div>
-          </form>
-        </div>
-      </div>
+      <div class="reveal rd2"><div class="sys-window p-6 md:p-8 relative"><div class="sys-corner-br">◆</div><div class="sys text-xs mb-6" style="color:rgba(110,110,154,.4);letter-spacing:.2em">// NEW_QUEST_SUBMISSION</div>
+        <form id="cf" onsubmit="submitForm(event)" class="flex flex-col gap-4">
+          <div><label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">PLAYER_NAME</label><input type="text" id="playerName" class="c-input" required/></div>
+          <div><label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">CONTACT_POINT</label><input type="email" id="playerEmail" class="c-input" required/></div>
+          <div><label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">QUEST_TITLE</label><input type="text" id="questTitle" class="c-input"/></div>
+          <div><label class="sys text-xs block mb-2" style="color:rgba(110,110,154,.5);letter-spacing:.12em">QUEST_DETAILS</label><textarea id="questDetails" rows="4" class="c-input" style="resize:none" required></textarea></div>
+          <button type="submit" class="btn-sys justify-center mt-2" id="submitBtn"><span id="btn-t">SUBMIT QUEST</span><svg id="btn-a" width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div id="fs" class="hidden sys text-xs text-center" style="color:var(--purple-lg);padding:8px;letter-spacing:.1em">◆ QUEST ACCEPTED — RESPONSE INCOMING ◆</div>
+        </form>
+      </div></div>
     </div>
   </div>
 </section>
@@ -402,88 +530,194 @@ nav{backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) 
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
     <span class="sys text-xs text-body" style="opacity:.5">© 2025 SAMUEL MAHANAIM — ALL RIGHTS RESERVED</span>
     <span class="sys text-xs" style="color:rgba(124,58,237,.5)">◆ RANK S DEVELOPER ◆</span>
-    <a href="#hero" class="sys text-xs flex items-center gap-2" style="color:rgba(110,110,154,.4);text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color='rgba(110,110,154,.4)'">
-      RETURN TO BASE
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 9V1M1 5l4-4 4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-    </a>
+    <a href="#hero" class="sys text-xs flex items-center gap-2" style="color:rgba(110,110,154,.4);text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--purple-lg)'" onmouseout="this.style.color='rgba(110,110,154,.4)'">RETURN TO BASE<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 9V1M1 5l4-4 4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
   </div>
 </footer>
 
+<!-- SHADOW DRAWER -->
+<div id="shadowDrawer" class="shadow-drawer"><div class="drawer-handle" onclick="toggleDrawer()"><span>✦ SHADOW</span></div><div class="drawer-content"><h4>✦ SHADOW_ARMY_FACTS</h4><div class="drawer-fact" id="randomFact">"The Shadow Army grows stronger every day — just like my skills."</div><div class="drawer-quote">"Arise." — Sung Jin-Woo</div></div></div>
+
 <script>
-/* Cursor */
-const cur=document.getElementById('cur'),dot=cur.querySelector('.dot'),ring=cur.querySelector('.ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function ac(){dot.style.left=mx+'px';dot.style.top=my+'px';rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ac);})();
+// ========== CURSOR FIXED ==========
+const cur = document.getElementById('cur');
+const dot = cur.querySelector('.dot');
+const ring = cur.querySelector('.ring');
+let mouseX = 0, mouseY = 0;
+let ringX = 0, ringY = 0;
 
-/* Progress bar */
-const pb=document.getElementById('pbar');
-window.addEventListener('scroll',()=>{pb.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%';});
-
-/* Particles */
-const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
-let W,H;
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
-class P{
-  constructor(){this.reset(true);}
-  reset(init=false){
-    this.x=Math.random()*W;this.y=init?Math.random()*H:H+10;
-    this.size=Math.random()*.8+.3;this.speed=Math.random()*.3+.1;
-    this.opacity=Math.random()*.4+.08;
-    this.hue=Math.random()>.75?45:275;
-  }
-  update(){this.y-=this.speed;if(this.y<-10)this.reset();}
-  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=`hsla(${this.hue},80%,70%,${this.opacity})`;ctx.fill();}
-}
-const parts=Array.from({length:150},()=>new P());
-(function ap(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(ap);})();
-
-/* Scroll reveal */
-const revEls=document.querySelectorAll('.reveal');
-const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');ro.unobserve(e.target);}});},{threshold:.1});
-revEls.forEach(el=>ro.observe(el));
-
-/* Stat bars */
-const bo=new IntersectionObserver(es=>{
-  es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.stat-bar-fill').forEach(b=>{b.style.transform=`scaleX(${b.dataset.pct})`;});bo.unobserve(e.target);}});
-},{threshold:.3});
-const ss=document.getElementById('stat-section');
-if(ss)bo.observe(ss);
-
-/* Typewriter */
-const phrases=['Building AI-powered systems.','Slaying bugs in the dungeon.','Shipping products at S-Rank speed.','Solo-leveling every day.','Awakened Full Stack & AI Dev.'];
-let pi=0,ci=0,del=false;const tw=document.getElementById('tw');
-function type(){
-  const p=phrases[pi];
-  if(!del){tw.textContent=p.slice(0,++ci);if(ci===p.length){del=true;setTimeout(type,2000);return;}setTimeout(type,50);}
-  else{tw.textContent=p.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(type,400);return;}setTimeout(type,25);}
-}
-type();
-
-/* Mobile nav */
-const hb=document.getElementById('ham-btn'),mn=document.getElementById('mob-nav');
-hb.addEventListener('click',()=>{hb.classList.toggle('open');mn.classList.toggle('open');});
-mn.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{hb.classList.remove('open');mn.classList.remove('open');}));
-
-/* Email validation & Form submission */
-const emailInput = document.getElementById('playerEmail');
-const emailError = document.getElementById('emailError');
-
-emailInput.addEventListener('input', function() {
-  const value = this.value;
-  if (value && !value.endsWith('@gmail.com')) {
-    emailError.classList.remove('hidden');
-    this.classList.add('error');
-  } else {
-    emailError.classList.add('hidden');
-    this.classList.remove('error');
-  }
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
 });
 
-function submitForm(e){
+function animateRing() {
+  ringX += (mouseX - ringX) * 0.15;
+  ringY += (mouseY - ringY) * 0.15;
+  ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+// ========== PROGRESS BAR ==========
+const pb = document.getElementById('pbar');
+window.addEventListener('scroll', () => {
+  const percent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  pb.style.width = percent + '%';
+});
+
+// ========== PARTICLES CANVAS ==========
+const canvas = document.getElementById('particles-bg'), ctx = canvas.getContext('2d');
+let W, H;
+function resizeCanvas() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init = false) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 10;
+    this.size = Math.random() * 0.8 + 0.3;
+    this.speed = Math.random() * 0.3 + 0.1;
+    this.opacity = Math.random() * 0.4 + 0.08;
+    this.hue = Math.random() > 0.75 ? 45 : 275;
+  }
+  update() { this.y -= this.speed; if (this.y < -10) this.reset(); }
+  draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = `hsla(${this.hue},80%,70%,${this.opacity})`; ctx.fill(); }
+}
+const particles = Array.from({ length: 150 }, () => new Particle());
+function animateParticles() { ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+animateParticles();
+
+// ========== FLOATING PARTICLES ==========
+function createFloatingParticles() {
+  const container = document.getElementById('particles');
+  const count = window.innerWidth < 768 ? 30 : 60;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 4 + 2;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 15 + 's';
+    p.style.animationDuration = Math.random() * 10 + 8 + 's';
+    p.style.opacity = Math.random() * 0.3 + 0.1;
+    container.appendChild(p);
+  }
+}
+createFloatingParticles();
+
+// ========== SCROLL REVEAL ==========
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('on'); revealObserver.unobserve(entry.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(el => revealObserver.observe(el));
+
+// ========== STAT BARS ==========
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.stat-bar-fill').forEach(bar => { bar.style.transform = `scaleX(${bar.dataset.pct})`; });
+      statObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+const statSection = document.getElementById('stat-section');
+if (statSection) statObserver.observe(statSection);
+
+// ========== ARISE ANIMATION ==========
+let ariseTriggered = false;
+const ariseObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !ariseTriggered) {
+      ariseTriggered = true;
+      const overlay = document.getElementById('ariseOverlay');
+      overlay.classList.add('active');
+      for (let i = 0; i < 50; i++) {
+        const p = document.createElement('div');
+        p.classList.add('arise-particle');
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.setProperty('--tx', (Math.random() * 200 - 100) + 'px');
+        p.style.setProperty('--ty', (Math.random() * 200 - 100) + 'px');
+        p.style.animationDelay = Math.random() * 0.5 + 's';
+        overlay.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
+      }
+      setTimeout(() => overlay.classList.remove('active'), 2500);
+      ariseObserver.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+const aboutSection = document.getElementById('about');
+if (aboutSection) ariseObserver.observe(aboutSection);
+
+// ========== TYPEWRITER ==========
+const phrases = ['Building AI-powered systems.', 'Slaying bugs in the dungeon.', 'Shipping products at S-Rank speed.', 'Solo-leveling every day.', 'Awakened Full Stack & AI Dev.'];
+let pIdx = 0, cIdx = 0, deleting = false;
+const twEl = document.getElementById('tw');
+function typeWriter() {
+  const current = phrases[pIdx];
+  if (!deleting) {
+    twEl.textContent = current.slice(0, ++cIdx);
+    if (cIdx === current.length) { deleting = true; setTimeout(typeWriter, 2000); return; }
+  } else {
+    twEl.textContent = current.slice(0, --cIdx);
+    if (cIdx === 0) { deleting = false; pIdx = (pIdx + 1) % phrases.length; setTimeout(typeWriter, 400); return; }
+  }
+  setTimeout(typeWriter, 50);
+}
+typeWriter();
+
+// ========== MOBILE NAV ==========
+const hamBtn = document.getElementById('ham-btn'), mobNav = document.getElementById('mob-nav');
+if (hamBtn) {
+  hamBtn.addEventListener('click', () => { hamBtn.classList.toggle('open'); mobNav.classList.toggle('open'); });
+  mobNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hamBtn.classList.remove('open'); mobNav.classList.remove('open'); }));
+}
+
+// ========== DRAWER ==========
+let drawerOpen = false;
+function toggleDrawer() {
+  const drawer = document.getElementById('shadowDrawer');
+  drawerOpen = !drawerOpen;
+  drawerOpen ? drawer.classList.add('open') : drawer.classList.remove('open');
+}
+const facts = [
+  "I've completed 44+ projects across different domains.",
+  "First time coding was making a simple calculator in Python.",
+  "I believe AI will augment humans, not replace them.",
+  "My favorite framework is Next.js, but I love trying new things.",
+  "I once debugged an issue for 6 hours — it was a missing semicolon.",
+  "Solo Leveling inspired me to always level up every single day."
+];
+setInterval(() => {
+  if (drawerOpen) {
+    const factEl = document.getElementById('randomFact');
+    const randomFact = facts[Math.floor(Math.random() * facts.length)];
+    if (factEl) factEl.textContent = `"${randomFact}"`;
+  }
+}, 5000);
+
+// ========== SMOOTH SCROLL OFFSET ==========
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    const href = this.getAttribute('href');
+    if (href === '#' || href === '') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      const offset = 80;
+      const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+    }
+  });
+});
+
+// ========== FORM SUBMIT ==========
+function submitForm(e) {
   e.preventDefault();
-  
   const name = document.getElementById('playerName').value;
   const email = document.getElementById('playerEmail').value;
   const questTitle = document.getElementById('questTitle').value || 'No title specified';
@@ -492,58 +726,44 @@ function submitForm(e){
   const btnText = document.getElementById('btn-t');
   const btnArrow = document.getElementById('btn-a');
   const feedback = document.getElementById('fs');
-  
-  if (!email.endsWith('@gmail.com')) {
-    emailError.classList.remove('hidden');
-    emailInput.classList.add('error');
-    return;
-  }
-  
+
   submitBtn.disabled = true;
   btnText.textContent = 'SENDING...';
   btnArrow.style.opacity = '0';
-  
+
   fetch('https://formsubmit.co/ajax/samuel.sinurat05@gmail.com', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({
       name: name,
       email: email,
       subject: `[NEW QUEST] ${questTitle}`,
-      message: questDetails,
+      message: `From: ${name} (${email})\n\n${questDetails}`,
       _captcha: 'false'
     })
   })
-  .then(response => response.json())
-  .then(data => {
-    btnText.textContent = 'SENT!';
-    feedback.classList.remove('hidden');
-    e.target.reset();
-    emailError.classList.add('hidden');
-    emailInput.classList.remove('error');
-    
-    setTimeout(() => {
-      btnText.textContent = 'SUBMIT QUEST';
-      btnArrow.style.opacity = '1';
-      submitBtn.disabled = false;
+    .then(response => response.json())
+    .then(data => {
+      btnText.textContent = 'SENT!';
+      feedback.classList.remove('hidden');
+      e.target.reset();
       setTimeout(() => {
-        feedback.classList.add('hidden');
-      }, 3000);
-    }, 2000);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    btnText.textContent = 'ERROR!';
-    setTimeout(() => {
-      btnText.textContent = 'SUBMIT QUEST';
-      btnArrow.style.opacity = '1';
-      submitBtn.disabled = false;
-    }, 2000);
-    alert('Failed to send. Please email directly to samuel.sinurat05@gmail.com');
-  });
+        btnText.textContent = 'SUBMIT QUEST';
+        btnArrow.style.opacity = '1';
+        submitBtn.disabled = false;
+        setTimeout(() => feedback.classList.add('hidden'), 3000);
+      }, 2000);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      btnText.textContent = 'ERROR!';
+      setTimeout(() => {
+        btnText.textContent = 'SUBMIT QUEST';
+        btnArrow.style.opacity = '1';
+        submitBtn.disabled = false;
+      }, 2000);
+      alert('Failed to send. Please email directly to samuel.sinurat05@gmail.com');
+    });
 }
 </script>
 </body>
