@@ -733,47 +733,34 @@ function submitForm(e) {
     return;
   }
 
-  submitBtn.disabled = true;
-  btnText.textContent = 'SENDING...';
-  btnArrow.style.opacity = '0';
+  // Format pesan
+  const message = 
+    `Name: ${name}\n` +
+    `Email: ${email}\n\n` +
+    `Quest Title: ${questTitle}\n\n` +
+    `Quest Details:\n${questDetails}\n\n` +
+    `---\nSent from your portfolio website\n` +
+    `Please reply to: ${email}`;
 
-  // PAKAI FORMSPREE (gratis, reliable)
-  fetch('https://formspree.io/f/xqapjqkv', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: name,
-      email: email,
-      subject: `[NEW QUEST] ${questTitle}`,
-      message: questDetails
-    })
-  })
-  .then(response => {
-    if (response.ok) {
-      btnText.textContent = 'SENT!';
-      feedback.classList.remove('hidden');
-      e.target.reset();
-      setTimeout(() => {
-        btnText.textContent = 'SUBMIT QUEST';
-        btnArrow.style.opacity = '1';
-        submitBtn.disabled = false;
-        setTimeout(() => feedback.classList.add('hidden'), 3000);
-      }, 2000);
-    } else {
-      throw new Error('Failed');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    btnText.textContent = 'ERROR!';
+  // Copy ke clipboard
+  navigator.clipboard.writeText(message).then(() => {
+    btnText.textContent = 'COPIED!';
+    feedback.classList.remove('hidden');
+    e.target.reset();
+    
+    alert('✅ Message copied to clipboard!\n\nPlease open your email client and send to:\nsamuel.sinurat05@gmail.com\n\nPaste the message there.');
+    
     setTimeout(() => {
       btnText.textContent = 'SUBMIT QUEST';
       btnArrow.style.opacity = '1';
       submitBtn.disabled = false;
+      setTimeout(() => feedback.classList.add('hidden'), 3000);
     }, 2000);
-    alert('Failed to send. Please email directly to samuel.sinurat05@gmail.com');
+  }).catch(() => {
+    alert('❌ Failed to copy. Please email directly to samuel.sinurat05@gmail.com');
+    btnText.textContent = 'SUBMIT QUEST';
+    btnArrow.style.opacity = '1';
+    submitBtn.disabled = false;
   });
 }
 </script>
